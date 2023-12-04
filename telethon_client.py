@@ -1,10 +1,10 @@
 import asyncio
 import os
 from telethon.sync import TelegramClient
-from dotenv import load_dotenv
 from telethon.errors import rpcerrorlist
-
 from config import PROJECT_PATH
+
+from dotenv import load_dotenv
 
 load_dotenv()
 

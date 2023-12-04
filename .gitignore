@@ -1,6 +1,7 @@
 ### Python template
 # Byte-compiled / optimized / DLL files
 .env
+.idea
 sessions/
 tmp/
 *.db
