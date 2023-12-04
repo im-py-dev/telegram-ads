@@ -414,7 +414,6 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
         _, step_name, value = call_str.split()
         print(call_str)
-        print(user_data.get(user_id))
         print(_, step_name, value)
 
         if step_name == 'start':

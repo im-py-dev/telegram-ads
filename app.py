@@ -18,6 +18,7 @@ bot = telebot.TeleBot(API_KEY, parse_mode='HTML', num_threads=5)
 try:
     bot.get_me()
 except telebot.apihelper.ApiTelegramException as _:
+    print(_)
     print("Bot Token is not valid")
     sys.exit()
 

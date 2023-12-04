@@ -17,9 +17,9 @@ def cancel_markup(__: STR):
 
 def select_city_markup(__: STR):
     user_keyboard = [
-        [InlineKeyboardButton(__.city_1, callback_data=f'2RENT city city_1')],
-        [InlineKeyboardButton(__.city_2, callback_data=f'2RENT city city_2'), InlineKeyboardButton(__.city_3, callback_data=f'2RENT city city_3')],
-        [InlineKeyboardButton(__.city_4, callback_data=f'2RENT city city_4'), InlineKeyboardButton(__.city_5, callback_data=f'2RENT city city_5'), InlineKeyboardButton(__.city_6, callback_data=f'2RENT city city_6')],
+        [InlineKeyboardButton(__.city_1, callback_data=f'RENT city city_1')],
+        [InlineKeyboardButton(__.city_2, callback_data=f'RENT city city_2'), InlineKeyboardButton(__.city_3, callback_data=f'RENT city city_3')],
+        [InlineKeyboardButton(__.city_4, callback_data=f'RENT city city_4'), InlineKeyboardButton(__.city_5, callback_data=f'RENT city city_5'), InlineKeyboardButton(__.city_6, callback_data=f'RENT city city_6')],
     ]
     #         [__.city_1],
     #         [__.city_2, __.city_3],
@@ -49,7 +49,7 @@ def select_sub_city_markup(__: STR):
 
 def end_date_markup(__: STR):
     user_keyboard = [
-        [InlineKeyboardButton(__.rent_agreemental, callback_data=f'2RENT end_date agreemental')],
+        [InlineKeyboardButton(__.rent_agreemental, callback_data=f'RENT end_date agreemental')],
     ]
     user_btn = InlineKeyboardMarkup()
     user_btn.row_width = 2
@@ -61,8 +61,8 @@ def end_date_markup(__: STR):
 
 def contract_status_markup(__: STR):
     user_keyboard = [
-        [InlineKeyboardButton(__.rent_with_contract, callback_data=f'2RENT contract_status with_contract')],
-        [InlineKeyboardButton(__.rent_without_contract, callback_data=f'2RENT contract_status without_contract')],
+        [InlineKeyboardButton(__.rent_with_contract, callback_data=f'RENT contract_status with_contract')],
+        [InlineKeyboardButton(__.rent_without_contract, callback_data=f'RENT contract_status without_contract')],
     ]
     user_btn = InlineKeyboardMarkup()
     user_btn.row_width = 2
@@ -74,8 +74,8 @@ def contract_status_markup(__: STR):
 
 def pricing_type_markup(__: STR):
     user_keyboard = [
-        [InlineKeyboardButton(__.rent_daily, callback_data=f'2RENT pricing_type daily')],
-        [InlineKeyboardButton(__.rent_monthly, callback_data=f'2RENT pricing_type monthly')],
+        [InlineKeyboardButton(__.rent_daily, callback_data=f'RENT pricing_type daily')],
+        [InlineKeyboardButton(__.rent_monthly, callback_data=f'RENT pricing_type monthly')],
     ]
     user_btn = InlineKeyboardMarkup()
     user_btn.row_width = 2
@@ -87,7 +87,7 @@ def pricing_type_markup(__: STR):
 
 def pricing_markup(__: STR):
     user_keyboard = [
-        [InlineKeyboardButton(__.rent_agreemental, callback_data=f'2RENT pricing agreemental')],
+        [InlineKeyboardButton(__.rent_agreemental, callback_data=f'RENT pricing agreemental')],
     ]
     user_btn = InlineKeyboardMarkup()
     user_btn.row_width = 2
@@ -99,7 +99,7 @@ def pricing_markup(__: STR):
 
 def description_markup(__: STR):
     user_keyboard = [
-        [InlineKeyboardButton(__.skip_btn, callback_data=f'2RENT description skip')],
+        [InlineKeyboardButton(__.skip_btn, callback_data=f'RENT description skip')],
     ]
     user_btn = InlineKeyboardMarkup()
     user_btn.row_width = 2
@@ -111,7 +111,7 @@ def description_markup(__: STR):
 
 def photos_markup(__: STR):
     user_keyboard = [
-        [InlineKeyboardButton(__.rent_without_photo, callback_data=f'2RENT photos skip')],
+        [InlineKeyboardButton(__.rent_without_photo, callback_data=f'RENT photos skip')],
     ]
     user_btn = InlineKeyboardMarkup()
     user_btn.row_width = 2
@@ -123,7 +123,7 @@ def photos_markup(__: STR):
 
 def photo_markup(__: STR):
     user_keyboard = [
-        [InlineKeyboardButton(__.rent_next_step, callback_data=f'2RENT photo skip')],
+        [InlineKeyboardButton(__.rent_next_step, callback_data=f'RENT photo skip')],
     ]
     user_btn = InlineKeyboardMarkup()
     user_btn.row_width = 2
@@ -136,8 +136,8 @@ def photo_markup(__: STR):
 def ad_preview_markup(__: STR):
     user_keyboard = [
         [
-            InlineKeyboardButton(__.confirm_t, callback_data=f'2RENT ad_preview confirm'),
-            InlineKeyboardButton(__.cancel_t, callback_data=f'2RENT ad_preview cancel')
+            InlineKeyboardButton(__.confirm_t, callback_data=f'RENT ad_preview confirm'),
+            InlineKeyboardButton(__.cancel_t, callback_data=f'RENT ad_preview cancel')
         ],
     ]
     user_btn = InlineKeyboardMarkup()
