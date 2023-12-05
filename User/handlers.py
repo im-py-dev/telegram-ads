@@ -248,6 +248,13 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             bot.register_next_step_handler(msg, get_sub_city)
 
         @cancel_option
+        def get_city_from_other(message, message_to_edit):
+            user_data[user_id]['city'] = message.text
+            bot.edit_message_text(text=f'{__.city_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id,reply_markup=None)
+            msg = bot.send_message(user_id, __.rent_sub_city, reply_markup=None)
+            bot.register_next_step_handler(msg, get_sub_city)
+
+        @cancel_option
         def get_sub_city(message):
             user_data[user_id]['sub_city'] = message.text
 
@@ -442,12 +449,16 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
             bot.clear_step_handler(call.message)
 
-            city = getattr(__, value)
-            user_data[user_id]['city'] = city
-            bot.edit_message_text(text=f'{__.city_label}{city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
+            if value == 'other':
+                bot.edit_message_text(text=__.rent_other_city, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+                bot.register_next_step_handler(call.message, get_city_from_other, call.message)
+            else:
+                city = getattr(__, value)
+                user_data[user_id]['city'] = city
+                bot.edit_message_text(text=f'{__.city_label}{city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
 
-            msg = bot.send_message(user_id, __.rent_sub_city, reply_markup=None)
-            bot.register_next_step_handler(msg, get_sub_city)
+                msg = bot.send_message(user_id, __.rent_sub_city, reply_markup=None)
+                bot.register_next_step_handler(msg, get_sub_city)
 
         if step_name == 'end_date':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)

@@ -20,6 +20,7 @@ def select_city_markup(__: STR):
         [InlineKeyboardButton(__.city_1, callback_data=f'RENT city city_1')],
         [InlineKeyboardButton(__.city_2, callback_data=f'RENT city city_2'), InlineKeyboardButton(__.city_3, callback_data=f'RENT city city_3')],
         [InlineKeyboardButton(__.city_4, callback_data=f'RENT city city_4'), InlineKeyboardButton(__.city_5, callback_data=f'RENT city city_5'), InlineKeyboardButton(__.city_6, callback_data=f'RENT city city_6')],
+        [InlineKeyboardButton(__.city_other, callback_data=f'RENT city other')],
     ]
 
     user_btn = InlineKeyboardMarkup()
