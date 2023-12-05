@@ -52,8 +52,7 @@ class STR:
             # print(variable, value)
             setattr(self, variable, value)
 
-        self.\
-            keyboard_main_menu = [
+        self.keyboard_main_menu = [
             [self.mm_btn_1],
             [self.mm_btn_2, self.mm_btn_3],
             [self.mm_btn_4],

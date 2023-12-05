@@ -12,6 +12,7 @@ from telebot.types import User as TUser
 from Admin.reply_markups import admin_ad_preview_markup
 from User.reply_markups import *
 from User.rent_markups import *
+# from User.rent2 import start_rent2
 
 from Modules.Base.User import users, TelegramUser
 from Modules.Base.languages import set_lang, STR
@@ -225,6 +226,10 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
     if not check_user_in_channels(user_id):
         return bot.send_message(call.message.from_user.id, f"{__.subscribe_first_m}\n {_N.join(force_subscribe_channels)}")
 
+    if call_str.startswith('RENT2'):
+        _, step_name, value = call_str.split()
+        # start_rent2(step_name, value)
+
     if call_str.startswith('RENT'):
         def cancel_option(func):
             def wrapper(message: Message, *args, **kwargs):
@@ -234,9 +239,10 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
             return wrapper
 
-        def get_city_name(call, value):
-            # __.__getattribute__(value)
-            user_data[user_id]['city'] = getattr(__, value)
+        def get_city_name(message, message_to_edit):
+            user_data[user_id]['city'] = message.text
+            bot.edit_message_text(text=f'{__.city_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
+
             msg = bot.send_message(user_id, __.rent_sub_city, reply_markup=None)
             bot.register_next_step_handler(msg, get_sub_city)
 
@@ -266,7 +272,6 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             # user_data['contract_status'] = True if message.text == 'With contract' else False
             user_data[user_id]['contract_status'] = message.text
             bot.send_message(message.from_user.id, __.rent_pricing_type, reply_markup=pricing_type_markup(__, ))
-            # bot.register_next_step_handler(message, get_pricing_type)
 
         @cancel_option
         def get_pricing_type(message):
@@ -360,6 +365,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 bot.send_message(text=ad_preview_template, chat_id=user_id,
                                  reply_markup=ad_preview_markup(__))
 
+            bot.delete_message(chat_id=user_id, message_id=message.id)
             bot.delete_message(chat_id=user_id, message_id=msg.message_id)
             # bot.register_next_step_handler(message, ad_confirm)
 
@@ -374,7 +380,8 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                     session.add(new_ad)
                     session.commit()
                     ad_id = new_ad.id
-            except Exception:
+            except Exception as r:
+                print(r)
                 bot.send_message(user_id, text=__.error_t, reply_markup=user_main_menu_markup(__))
 
             else:
@@ -406,11 +413,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         )
 
                 # Last step: tel user
-                bot.send_message(
-                    user_id,
-                    text=__.rent_thank_you_msg,
-                    reply_markup=user_main_menu_markup(__)
-                )
+                bot.edit_message_text(text=__.rent_thank_you_msg, chat_id=user_id, message_id=message.id, reply_markup=None)
+                bot.edit_message_reply_markup(chat_id=user_id, message_id=message.id, reply_markup=user_main_menu_markup(__))
+                # bot.send_message(user_id,text=__.rent_thank_you_msg,reply_markup=user_main_menu_markup(__))
 
         _, step_name, value = call_str.split()
         print(call_str)
@@ -418,13 +423,18 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
         if step_name == 'start':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            city_markup = select_city_markup(__)
+            bot.delete_message(chat_id=user_id, message_id=call.message.id)
+            # bot.edit_message_text(text=__.rent_t1, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+            # bot.edit_message_reply_markup(chat_id=user_id, message_id=call.message.id, reply_markup=cancel_markup(__))
             bot.send_message(user_id, __.rent_t1, reply_markup=cancel_markup(__))
             time.sleep(0.1)
-            bot.send_message(user_id, __.rent_t2, reply_markup=select_city_markup(__))
+            msg = bot.send_message(user_id, __.rent_t2, reply_markup=city_markup)
             # bot.add_data(user_id)
             user_data[user_id] = {
                 'id': f'{user_id}_{call.message.id}', 'uid': user_id, 'category': 'Rent', 'user_full_name': call.from_user.full_name
             }
+            bot.register_next_step_handler(msg, get_city_name, msg)
 
         if step_name == 'city':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)

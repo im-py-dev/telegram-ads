@@ -257,10 +257,14 @@ def admin_message(message, bot: TeleBot):
 
         @cancel_option
         def handle_broadcast_message(message: Message, all_users: list[User]):
+            done_send_count = 0
             for user in all_users:
-                broadcast_message(user.id, message)
+                if broadcast_message(user.id, message):
+                    done_send_count += 1
 
-        return bot.send_message(admin_id, 'Not Ready yet')
+            bot.send_message(admin_id, f'Done Sending to {done_send_count} user!', reply_markup=cancel_markup(__))
+
+        # return bot.send_message(admin_id, 'Not Ready yet')
         users = session.query(User).all()
         bot.send_message(admin_id, 'Send your message:', reply_markup=cancel_markup(__))
         return bot.register_next_step_handler(message, handle_broadcast_message, users)
