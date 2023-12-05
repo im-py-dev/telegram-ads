@@ -239,6 +239,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
             return wrapper
 
+        @cancel_option
         def get_city_name(message, message_to_edit):
             user_data[user_id]['city'] = message.text
             bot.edit_message_text(text=f'{__.city_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
@@ -249,6 +250,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         @cancel_option
         def get_sub_city(message):
             user_data[user_id]['sub_city'] = message.text
+
             bot.send_message(user_id, __.rent_start_date, reply_markup=None)
             bot.register_next_step_handler(message, get_start_date)
 
@@ -438,6 +440,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
         if step_name == 'city':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
 
             city = getattr(__, value)
             user_data[user_id]['city'] = city
