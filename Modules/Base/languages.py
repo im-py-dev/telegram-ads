@@ -63,6 +63,7 @@ class STR:
             [self.admin_mm_btn_2],
             [self.admin_mm_btn_3],
             [self.admin_mm_btn_4],
+            [self.admin_mm_btn_5],
         ]
 
 
