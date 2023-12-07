@@ -662,7 +662,13 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 return ad_confirm(call.message)
             elif value == 'cancel':
                 bot.clear_step_handler(call.message)
-                bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+
+                if call.message.text:
+                    bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+                elif call.message.caption:
+                    bot.edit_message_caption(caption=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+
+                # bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id, reply_markup=None)
                 return bot.send_message(user_id, __.canceled_t, reply_markup=user_main_menu_markup(__))
 
     if call_str.startswith('ROOM_RENT'):

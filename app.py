@@ -1,3 +1,4 @@
+import signal
 import sys
 
 import telethon_client
@@ -14,6 +15,18 @@ load_dotenv()
 
 API_KEY = os.getenv('BOT_TOKEN')
 bot = telebot.TeleBot(API_KEY, parse_mode='HTML', num_threads=5)
+
+
+# Define a function to handle the SIGINT signal (Ctrl+C)
+def handle_sigint(signal, frame):
+    print("Received SIGINT. Stopping the Telebot.")
+    bot.stop_polling()
+    exit(0)
+
+
+# Register the signal handler
+signal.signal(signal.SIGINT, handle_sigint)
+
 
 try:
     bot.get_me()
