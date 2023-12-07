@@ -3,7 +3,7 @@ import shutil
 
 from sqlalchemy.orm import make_transient
 
-from User.rent_markups import cancel_markup
+from User.rent_markups import cancel_markup, cancel_confirm_markup
 from config import ADMINS_IDS, posting_channels, PROJECT_PATH
 
 from telebot import TeleBot
@@ -342,15 +342,16 @@ def admin_message(message, bot: TeleBot):
         bot.send_message(admin_id, 'Send your message:', reply_markup=cancel_markup(__))
         return bot.register_next_step_handler(message, handle_broadcast_message, users)
 
-    def command_5():
-        @cancel_option
-        def handle_turn_off(message: Message):
-            bot.send_message(admin_id, f'Bot Turning Off...', reply_markup=admin_main_menu_markup(__))
-            bot.stop_bot()
-            exit()
-
-        bot.send_message(admin_id, 'Turn Off Bot:', reply_markup=cancel_markup(__))
-        return bot.register_next_step_handler(message, handle_turn_off)
+    # def command_5():
+    #     @cancel_option
+    #     def handle_turn_off(message: Message):
+    #         if message.text == __.confirm_t:
+    #             bot.send_message(admin_id, f'Bot Turning Off...', reply_markup=admin_main_menu_markup(__))
+    #             bot.stop_bot()
+    #             quit()
+    #
+    #     bot.send_message(admin_id, 'Turn Off Bot:', reply_markup=cancel_confirm_markup(__))
+    #     return bot.register_next_step_handler(message, handle_turn_off)
 
     # not_known_command
     def unknown_command():
@@ -361,7 +362,7 @@ def admin_message(message, bot: TeleBot):
         __.admin_mm_btn_2: command_2,
         __.admin_mm_btn_3: command_3,
         __.admin_mm_btn_4: command_4,
-        __.admin_mm_btn_5: command_5,
+        # __.admin_mm_btn_5: command_5,
     }
     func = commands.setdefault(command, unknown_command)
     func()
