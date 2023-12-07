@@ -318,21 +318,39 @@ def admin_message(message, bot: TeleBot):
     def command_4():
         @antiflood_decorator
         def broadcast_message(user_id: int, message: Message):
-            return bot.forward_message(chat_id=user_id, from_chat_id=message.from_user.id, message_id=message.id)
+            try:
+                return bot.forward_message(chat_id=user_id, from_chat_id=message.from_user.id, message_id=message.id)
+            except ApiTelegramException:
+                return False
+            except Exception:
+                return False
 
         @cancel_option
         def handle_broadcast_message(message: Message, all_users: list[User]):
             done_send_count = 0
+            unsuccessful_send_count = 0
             for user in all_users:
                 if broadcast_message(user.id, message):
                     done_send_count += 1
+                else:
+                    unsuccessful_send_count += 1
 
-            bot.send_message(admin_id, f'Done Sending to {done_send_count} user!', reply_markup=cancel_markup(__))
+            bot.send_message(admin_id, f'Done Sending to {done_send_count} user! \n Unsuccessful: {unsuccessful_send_count}', reply_markup=admin_main_menu_markup(__))
 
         # return bot.send_message(admin_id, 'Not Ready yet')
         users = session.query(User).all()
         bot.send_message(admin_id, 'Send your message:', reply_markup=cancel_markup(__))
         return bot.register_next_step_handler(message, handle_broadcast_message, users)
+
+    def command_5():
+        @cancel_option
+        def handle_turn_off(message: Message):
+            bot.send_message(admin_id, f'Bot Turning Off...', reply_markup=admin_main_menu_markup(__))
+            bot.stop_bot()
+            exit()
+
+        bot.send_message(admin_id, 'Turn Off Bot:', reply_markup=cancel_markup(__))
+        return bot.register_next_step_handler(message, handle_turn_off)
 
     # not_known_command
     def unknown_command():
@@ -343,6 +361,7 @@ def admin_message(message, bot: TeleBot):
         __.admin_mm_btn_2: command_2,
         __.admin_mm_btn_3: command_3,
         __.admin_mm_btn_4: command_4,
+        __.admin_mm_btn_5: command_5,
     }
     func = commands.setdefault(command, unknown_command)
     func()
