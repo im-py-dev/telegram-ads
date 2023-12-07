@@ -226,10 +226,13 @@ def admin_message(message, bot: TeleBot):
 
             for pending_ad in pending_ads:
                 ad_data: dict = json.loads(pending_ad.data)
-                price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} #{__.euros_per}{ad_data['pricing_type']}"
+
+                price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} {__.euros_per} #{ad_data['pricing_type']}"
+                price_line2 = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])}"
+
                 admin_templates_preview = {
                     'rent': {
-                        'template': __.rent_user_view_ad,
+                        'template': __.rent_admin_preview,
                         'template_replacer': {
                             '[city]': ad_data['city'],
                             '[sub_city]': ad_data['sub_city'],
@@ -243,7 +246,7 @@ def admin_message(message, bot: TeleBot):
                         }
                     },
                     'room_rent': {
-                        'template': __.room_rent_user_view_ad,
+                        'template': __.room_rent_admin_preview,
                         'template_replacer': {
                             '[city]': ad_data['city'],
                             '[sub_city]': ad_data['sub_city'],
@@ -256,8 +259,9 @@ def admin_message(message, bot: TeleBot):
                             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                         }
                     },
+
                     'room_applicant': {
-                        'template': __.room_applicant_user_view_ad,
+                        'template': __.room_applicant_admin_preview,
                         'template_replacer': {
                             '[city]': ad_data['city'],
                             '[sub_city]': ad_data['sub_city'],
@@ -270,7 +274,7 @@ def admin_message(message, bot: TeleBot):
                         }
                     },
                     'home_applicant': {
-                        'template': __.home_applicant_user_view_ad,
+                        'template': __.home_applicant_admin_preview,
                         'template_replacer': {
                             '[city]': ad_data['city'],
                             '[sub_city]': ad_data['sub_city'],
@@ -282,7 +286,126 @@ def admin_message(message, bot: TeleBot):
                             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                         }
                     },
+
+                    'meldezettel_applicant': {
+                        'template': __.meldezettel_applicant_admin_preview,
+                        'template_replacer': {
+                            '[city]': ad_data['city'],
+                            '[sub_city]': ad_data['sub_city'],
+                            '[start_date]': ad_data['start_date'],
+                            '[end_date]': ad_data['end_date'],
+                            # '[contract_status]': ad_data['contract_status'],
+                            # '[price_line]': price_line,
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                            ad_data['description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
+                    },
+                    'meldezettel': {
+                        'template': __.meldezettel_admin_preview,
+                        'template_replacer': {
+                            '[city]': ad_data['city'],
+                            '[sub_city]': ad_data['sub_city'],
+                            '[start_date]': ad_data['start_date'],
+                            '[end_date]': ad_data['end_date'],
+                            '[contract_status]': ad_data['contract_status'],
+                            '[price_line]': price_line,
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                            ad_data['description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
+                    },
+
+                    'selling_goods': {
+                        'template': __.selling_goods_admin_preview,
+                        'template_replacer': {
+                            '[product_name]': ad_data['product_name'],
+                            '[city]': ad_data['city'],
+                            '[sub_city]': ad_data['sub_city'],
+                            # '[start_date]': ad_data['start_date'],
+                            # '[end_date]': ad_data['end_date'],
+                            # '[contract_status]': ad_data['contract_status'],
+                            '[price_line2]': price_line2,
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                            ad_data['description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
+                    },
+                    'buying_goods': {
+                        'template': __.buying_goods_admin_preview,
+                        'template_replacer': {
+                            '[product_name]': ad_data['product_name'],
+                            '[city]': ad_data['city'],
+                            '[sub_city]': ad_data['sub_city'],
+                            # '[start_date]': ad_data['start_date'],
+                            # '[end_date]': ad_data['end_date'],
+                            # '[contract_status]': ad_data['contract_status'],
+                            '[price_line2]': price_line2,
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                            ad_data['description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
+                    },
                 }
+
+                # price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} {__.euros_per} #{ad_data['pricing_type']}"
+                # admin_templates_preview = {
+                #     'rent': {
+                #         'template': __.rent_user_view_ad,
+                #         'template_replacer': {
+                #             '[city]': ad_data['city'],
+                #             '[sub_city]': ad_data['sub_city'],
+                #             '[start_date]': ad_data['start_date'],
+                #             '[end_date]': ad_data['end_date'],
+                #             '[contract_status]': ad_data['contract_status'],
+                #             '[price_line]': price_line,
+                #             '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                #                 'description'] else '',
+                #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                #         }
+                #     },
+                #     'room_rent': {
+                #         'template': __.room_rent_user_view_ad,
+                #         'template_replacer': {
+                #             '[city]': ad_data['city'],
+                #             '[sub_city]': ad_data['sub_city'],
+                #             '[start_date]': ad_data['start_date'],
+                #             '[end_date]': ad_data['end_date'],
+                #             '[contract_status]': ad_data['contract_status'],
+                #             '[price_line]': price_line,
+                #             '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                #                 'description'] else '',
+                #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                #         }
+                #     },
+                #     'room_applicant': {
+                #         'template': __.room_applicant_user_view_ad,
+                #         'template_replacer': {
+                #             '[city]': ad_data['city'],
+                #             '[sub_city]': ad_data['sub_city'],
+                #             '[start_date]': ad_data['start_date'],
+                #             '[end_date]': ad_data['end_date'],
+                #             '[contract_status]': ad_data['contract_status'],
+                #             '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                #                 'description'] else '',
+                #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                #         }
+                #     },
+                #     'home_applicant': {
+                #         'template': __.home_applicant_user_view_ad,
+                #         'template_replacer': {
+                #             '[city]': ad_data['city'],
+                #             '[sub_city]': ad_data['sub_city'],
+                #             '[start_date]': ad_data['start_date'],
+                #             '[end_date]': ad_data['end_date'],
+                #             '[contract_status]': ad_data['contract_status'],
+                #             '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                #                 'description'] else '',
+                #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                #         }
+                #     },
+                # }
+
                 message_template_dict = admin_templates_preview.get(pending_ad.category)
                 message_template_str = message_template_dict['template']
                 message_template_replacer = message_template_dict['template_replacer']
@@ -405,7 +528,9 @@ def admin_callback_query(call, bot: TeleBot):
                     except Exception as r:
                         print(r)
                     else:
-                        price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} #{__.euros_per}{ad_data['pricing_type']}"
+                        price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} {__.euros_per} #{ad_data['pricing_type']}"
+                        price_line2 = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])}"
+
                         categories_templates_channel = {
                             'rent': {
                                 'template': __.rent_channel_message,
@@ -416,8 +541,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[end_date]': ad_data['end_date'],
                                     '[contract_status]': ad_data['contract_status'],
                                     '[price_line]': price_line,
-                                    '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
-                                        'description'] else '',
+                                    '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data['description'] else '',
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
                             },
@@ -462,6 +586,67 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
                             },
+
+                            'meldezettel_applicant': {
+                                'template': __.meldezettel_channel_message,
+                                'template_replacer': {
+                                    '[city]': ad_data['city'],
+                                    '[sub_city]': ad_data['sub_city'],
+                                    '[start_date]': ad_data['start_date'],
+                                    '[end_date]': ad_data['end_date'],
+                                    # '[contract_status]': ad_data['contract_status'],
+                                    # '[price_line]': price_line,
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                                    ad_data['description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+                            'meldezettel': {
+                                'template': __.meldezettel_channel_message,
+                                'template_replacer': {
+                                    '[city]': ad_data['city'],
+                                    '[sub_city]': ad_data['sub_city'],
+                                    '[start_date]': ad_data['start_date'],
+                                    '[end_date]': ad_data['end_date'],
+                                    '[contract_status]': ad_data['contract_status'],
+                                    '[price_line]': price_line,
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                                    ad_data['description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+
+                            'selling_goods': {
+                                'template': __.selling_goods_channel_message,
+                                'template_replacer': {
+                                    '[product_name]': ad_data['product_name'],
+                                    '[city]': ad_data['city'],
+                                    '[sub_city]': ad_data['sub_city'],
+                                    # '[start_date]': ad_data['start_date'],
+                                    # '[end_date]': ad_data['end_date'],
+                                    # '[contract_status]': ad_data['contract_status'],
+                                    '[price_line2]': price_line2,
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                                    ad_data['description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+                            'buying_goods': {
+                                'template': __.buying_goods_channel_message,
+                                'template_replacer': {
+                                    '[product_name]': ad_data['product_name'],
+                                    '[city]': ad_data['city'],
+                                    '[sub_city]': ad_data['sub_city'],
+                                    # '[start_date]': ad_data['start_date'],
+                                    # '[end_date]': ad_data['end_date'],
+                                    # '[contract_status]': ad_data['contract_status'],
+                                    '[price_line2]': price_line2,
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                                    ad_data['description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+
                         }
                         message_template_dict = categories_templates_channel.get(ad_category)
                         message_template_str = message_template_dict['template']

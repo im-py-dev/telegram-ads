@@ -34,16 +34,39 @@ def user_main_menu_markup(__: STR):
 
 def ads_catygories_markup(__: STR, user_id):
     user_keyboard = [
-        InlineKeyboardButton(__.rent_btn, callback_data=f'RENT start value'),
-        InlineKeyboardButton(__.room_rent_btn, callback_data=f'ROOM_RENT start value'),
-        # InlineKeyboardButton(__.room_applicant_btn, callback_data=f'ROOM_APPLICANT start value'),
-        # InlineKeyboardButton(__.home_applicant_btn, callback_data=f'HOME_APPLICANT start value'),
-        # InlineKeyboardButton(__, callback_data=f'RENT start value'),
+        [
+            InlineKeyboardButton(__.rent_btn, callback_data=f'RENT start value'),
+            InlineKeyboardButton(__.room_rent_btn, callback_data=f'ROOM_RENT start value'),
+        ],
+
+        [
+            InlineKeyboardButton(__.room_applicant_btn, callback_data=f'ROOM_APPLICANT start value'),
+            InlineKeyboardButton(__.home_applicant_btn, callback_data=f'HOME_APPLICANT start value'),
+         ],
+
+        [
+            InlineKeyboardButton(__.meldezettel_btn, callback_data=f'MELDEZETTEL start value'),
+            InlineKeyboardButton(__.meldezettel_applicant_btn, callback_data=f'MELDEZETTEL_APPLICANT start value'),
+         ],
+
+        [
+            InlineKeyboardButton(__.selling_goods_btn, callback_data=f'SELLING_GOODS start value'),
+            InlineKeyboardButton(__.buying_goods_btn, callback_data=f'BUYING_GOODS start value'),
+         ],
+
+        [
+            # InlineKeyboardButton(__.selling_goods_btn, callback_data=f'SELLING_CARGO start value'),
+            # InlineKeyboardButton(__.buying_cargo_btn, callback_data=f'BUYING_CARGO start value'),
+        ],
     ]
 
     user_btn = InlineKeyboardMarkup()
     user_btn.row_width = 3
-    user_btn.add(*user_keyboard)
+
+    for _ in user_keyboard:
+        user_btn.row(*_)
+
+    # user_btn.add(*user_keyboard)
     return user_btn
 
 
