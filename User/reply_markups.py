@@ -35,6 +35,9 @@ def user_main_menu_markup(__: STR):
 def ads_catygories_markup(__: STR, user_id):
     user_keyboard = [
         InlineKeyboardButton(__.rent_btn, callback_data=f'RENT start value'),
+        InlineKeyboardButton(__.room_rent_btn, callback_data=f'ROOM_RENT start value'),
+        # InlineKeyboardButton(__.room_applicant_btn, callback_data=f'ROOM_APPLICANT start value'),
+        # InlineKeyboardButton(__.home_applicant_btn, callback_data=f'HOME_APPLICANT start value'),
         # InlineKeyboardButton(__, callback_data=f'RENT start value'),
     ]
 

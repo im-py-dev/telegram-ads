@@ -152,7 +152,9 @@ def admin_message(message, bot: TeleBot):
     def cancel_option(func):
         def wrapper(message: Message, *args, **kwargs):
             if message.text and message.text == __.cancel_t:
-                return bot.send_message(message.from_user.id, f"Welcome {message.from_user.first_name}!, this is your Dashboard", reply_markup=admin_main_menu_markup(__))
+                return bot.send_message(message.from_user.id,
+                                        f"Welcome {message.from_user.first_name}!, this is your Dashboard",
+                                        reply_markup=admin_main_menu_markup(__))
             return func(message, *args, **kwargs)
 
         return wrapper
@@ -224,17 +226,80 @@ def admin_message(message, bot: TeleBot):
 
             for pending_ad in pending_ads:
                 ad_data: dict = json.loads(pending_ad.data)
-                admin_preview_template = formatted(__.rent_admin_preview, {
-                    '[city]': ad_data['city'],
-                    '[sub_city]': ad_data['sub_city'],
-                    '[start_date]': ad_data['start_date'],
-                    '[end_date]': ad_data['end_date'],
-                    '[contract_status]': ad_data['contract_status'],
-                    '[pricing_type]': ad_data['pricing_type'],
-                    '[price]': format_number(ad_data['price']),
-                    '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data['description'] else '',
-                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
-                })
+                price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} #{__.euros_per}{ad_data['pricing_type']}"
+                admin_templates_preview = {
+                    'rent': {
+                        'template': __.rent_user_view_ad,
+                        'template_replacer': {
+                            '[city]': ad_data['city'],
+                            '[sub_city]': ad_data['sub_city'],
+                            '[start_date]': ad_data['start_date'],
+                            '[end_date]': ad_data['end_date'],
+                            '[contract_status]': ad_data['contract_status'],
+                            '[price_line]': price_line,
+                            '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                                'description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
+                    },
+                    'room_rent': {
+                        'template': __.room_rent_user_view_ad,
+                        'template_replacer': {
+                            '[city]': ad_data['city'],
+                            '[sub_city]': ad_data['sub_city'],
+                            '[start_date]': ad_data['start_date'],
+                            '[end_date]': ad_data['end_date'],
+                            '[contract_status]': ad_data['contract_status'],
+                            '[price_line]': price_line,
+                            '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                                'description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
+                    },
+                    'room_applicant': {
+                        'template': __.room_applicant_user_view_ad,
+                        'template_replacer': {
+                            '[city]': ad_data['city'],
+                            '[sub_city]': ad_data['sub_city'],
+                            '[start_date]': ad_data['start_date'],
+                            '[end_date]': ad_data['end_date'],
+                            '[contract_status]': ad_data['contract_status'],
+                            '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                                'description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
+                    },
+                    'home_applicant': {
+                        'template': __.home_applicant_user_view_ad,
+                        'template_replacer': {
+                            '[city]': ad_data['city'],
+                            '[sub_city]': ad_data['sub_city'],
+                            '[start_date]': ad_data['start_date'],
+                            '[end_date]': ad_data['end_date'],
+                            '[contract_status]': ad_data['contract_status'],
+                            '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                                'description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
+                    },
+                }
+                message_template_dict = admin_templates_preview.get(pending_ad.category)
+                message_template_str = message_template_dict['template']
+                message_template_replacer = message_template_dict['template_replacer']
+                admin_preview_template = formatted(message_template_str, message_template_replacer)
+
+                # message_template_str = categories_templates_preview.get(pending_ad.category)
+                # admin_preview_template = formatted(message_template_str, {
+                #     '[city]': ad_data['city'],
+                #     '[sub_city]': ad_data['sub_city'],
+                #     '[start_date]': ad_data['start_date'],
+                #     '[end_date]': ad_data['end_date'],
+                #     '[contract_status]': ad_data['contract_status'],
+                #     '[pricing_type]': ad_data['pricing_type'],
+                #     '[price]': format_number(ad_data['price']),
+                #     '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data['description'] else '',
+                #     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                # })
 
                 if ad_data['photos']:
                     bot.send_photo(
@@ -314,23 +379,74 @@ def admin_callback_query(call, bot: TeleBot):
                         with session:
                             user_ad: Ad = session.query(Ad).filter_by(user_id=user_id, id=new_ad_id).first()
                             ad_id = user_ad.id
+                            ad_category = user_ad.category
                             user_ad.ad_status = 'completed'
                             session.commit()
                     except Exception as r:
                         print(r)
                     else:
-                        rent_channel_message = formatted(__.rent_channel_message, {
-                            '[city]': ad_data['city'],
-                            '[sub_city]': ad_data['sub_city'],
-                            '[start_date]': ad_data['start_date'],
-                            '[end_date]': ad_data['end_date'],
-                            '[contract_status]': ad_data['contract_status'],
-                            '[pricing_type]': ad_data['pricing_type'],
-                            '[price]': format_number(ad_data['price']),
-                            '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
-                                'description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
-                        })
+                        price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} #{__.euros_per}{ad_data['pricing_type']}"
+                        categories_templates_channel = {
+                            'rent': {
+                                'template': __.rent_channel_message,
+                                'template_replacer': {
+                                    '[city]': ad_data['city'],
+                                    '[sub_city]': ad_data['sub_city'],
+                                    '[start_date]': ad_data['start_date'],
+                                    '[end_date]': ad_data['end_date'],
+                                    '[contract_status]': ad_data['contract_status'],
+                                    '[price_line]': price_line,
+                                    '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                                        'description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+                            'room_rent': {
+                                'template': __.room_rent_channel_message,
+                                'template_replacer': {
+                                    '[city]': ad_data['city'],
+                                    '[sub_city]': ad_data['sub_city'],
+                                    '[start_date]': ad_data['start_date'],
+                                    '[end_date]': ad_data['end_date'],
+                                    '[contract_status]': ad_data['contract_status'],
+                                    '[price_line]': price_line,
+                                    '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                                        'description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+
+                            'room_applicant': {
+                                'template': __.room_applicant_channel_message,
+                                'template_replacer': {
+                                    '[city]': ad_data['city'],
+                                    '[sub_city]': ad_data['sub_city'],
+                                    '[start_date]': ad_data['start_date'],
+                                    '[end_date]': ad_data['end_date'],
+                                    '[contract_status]': ad_data['contract_status'],
+                                    '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                                        'description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+                            'home_applicant': {
+                                'template': __.home_applicant_channel_message,
+                                'template_replacer': {
+                                    '[city]': ad_data['city'],
+                                    '[sub_city]': ad_data['sub_city'],
+                                    '[start_date]': ad_data['start_date'],
+                                    '[end_date]': ad_data['end_date'],
+                                    '[contract_status]': ad_data['contract_status'],
+                                    '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                                        'description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+                        }
+                        message_template_dict = categories_templates_channel.get(ad_category)
+                        message_template_str = message_template_dict['template']
+                        message_template_replacer = message_template_dict['template_replacer']
+                        rent_channel_message = formatted(message_template_str, message_template_replacer)
 
                         for posting_channel in posting_channels:
                             if ad_data.get('photos'):
