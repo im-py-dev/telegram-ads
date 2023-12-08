@@ -55,8 +55,8 @@ def ads_catygories_markup(__: STR, user_id):
          ],
 
         [
-            # InlineKeyboardButton(__.selling_goods_btn, callback_data=f'SELLING_CARGO start value'),
-            # InlineKeyboardButton(__.buying_cargo_btn, callback_data=f'BUYING_CARGO start value'),
+            InlineKeyboardButton(__.selling_cargo_btn, callback_data=f'SELLING_CARGO start value'),
+            InlineKeyboardButton(__.buying_cargo_btn, callback_data=f'BUYING_CARGO start value'),
         ],
     ]
 
@@ -74,6 +74,7 @@ def my_ads_3options_markup(__: STR, user_id):
     user_keyboard = [
         InlineKeyboardButton('PENDING ADS', callback_data=f'OPEN_ADS pending {user_id}'),
         InlineKeyboardButton('ACCEPTED ADS', callback_data=f'OPEN_ADS completed {user_id}'),
+        InlineKeyboardButton('EXPIRED ADS', callback_data=f'OPEN_ADS expired {user_id}'),
         InlineKeyboardButton('DECLINED ADS', callback_data=f'OPEN_ADS canceled {user_id}'),
     ]
 
@@ -92,6 +93,9 @@ def my_ads_markup(__: STR, user_id, user_ad: Ad, len_user_ads):
 
     if user_ad.ad_status.name == 'pending':
         user_keyboard.append(InlineKeyboardButton('DELETE', callback_data=f'AD_DELETE {user_id} {user_ad.id}'))
+
+    if user_ad.ad_status.name == 'completed':
+        user_keyboard.append(InlineKeyboardButton('EXPIRE', callback_data=f'AD_EXPIRE {user_id} {user_ad.id}'))
 
     user_btn = InlineKeyboardMarkup()
     user_btn.row_width = 2

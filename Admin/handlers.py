@@ -165,7 +165,8 @@ def admin_message(message, bot: TeleBot):
     # admin = get_user(admin_id)
     with Session() as session:
         admin = session.query(User).filter_by(id=admin_id).first()
-
+        if not admin:
+            return bot.send_message(text='/start', chat_id=admin_id)
     __ = set_lang(admin.language_code)
 
     def command_1():
@@ -341,6 +342,37 @@ def admin_message(message, bot: TeleBot):
                             # '[end_date]': ad_data['end_date'],
                             # '[contract_status]': ad_data['contract_status'],
                             '[price_line2]': price_line2,
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                            ad_data['description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
+                    },
+
+                    'buying_cargo': {
+                        'template': __.buying_cargo_admin_preview,
+                        'template_replacer': {
+                            '[from_to_city]': ad_data['from_to_city'],
+                            '[start_date]': ad_data['start_date'],
+                            '[city]': ad_data['city'],
+                            '[city2]': ad_data['city2'],
+                            '[load]': ad_data['load'],
+                            '[price]': __.rent_agreemental if ad_data[
+                                                                  'price'] == __.rent_agreemental else format_number(
+                                ad_data['price']),
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                            ad_data['description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
+                    },
+                    'selling_cargo': {
+                        'template': __.selling_cargo_admin_preview,
+                        'template_replacer': {
+                            '[from_to_city]': ad_data['from_to_city'],
+                            '[start_date]': ad_data['start_date'],
+                            '[city]': ad_data['city'],
+                            '[city2]': ad_data['city2'],
+                            '[load]': ad_data['load'],
+                            '[price]': __.rent_agreemental if ad_data['price'] == __.rent_agreemental else format_number(ad_data['price']),
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                             ad_data['description'] else '',
                             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
@@ -647,6 +679,39 @@ def admin_callback_query(call, bot: TeleBot):
                                 }
                             },
 
+                            'buying_cargo': {
+                                'template': __.buying_cargo_channel_message,
+                                'template_replacer': {
+                                    '[from_to_city]': ad_data['from_to_city'],
+                                    '[start_date]': ad_data['start_date'],
+                                    '[city]': ad_data['city'],
+                                    '[city2]': ad_data['city2'],
+                                    '[load]': ad_data['load'],
+                                    '[price]': __.rent_agreemental if ad_data[
+                                                                          'price'] == __.rent_agreemental else format_number(
+                                        ad_data['price']),
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                                    ad_data['description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+                            'selling_cargo': {
+                                'template': __.selling_cargo_channel_message,
+                                'template_replacer': {
+                                    '[from_to_city]': ad_data['from_to_city'],
+                                    '[start_date]': ad_data['start_date'],
+                                    '[city]': ad_data['city'],
+                                    '[city2]': ad_data['city2'],
+                                    '[load]': ad_data['load'],
+                                    '[price]': __.rent_agreemental if ad_data[
+                                                                          'price'] == __.rent_agreemental else format_number(
+                                        ad_data['price']),
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                                    ad_data['description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+
                         }
                         message_template_dict = categories_templates_channel.get(ad_category)
                         message_template_str = message_template_dict['template']
@@ -654,19 +719,27 @@ def admin_callback_query(call, bot: TeleBot):
                         rent_channel_message = formatted(message_template_str, message_template_replacer)
 
                         for posting_channel in posting_channels:
+                            # todo change how we save message ID if we want multi channels
                             if ad_data.get('photos'):
-                                bot.send_photo(
+                                channel_msg = bot.send_photo(
                                     chat_id=posting_channel,
                                     photo=ad_data.get('photos')[0],
                                     caption=rent_channel_message,
                                     reply_markup=rent_channel_markup(__, ad_id),
                                 )
                             else:
-                                bot.send_message(
+                                channel_msg = bot.send_message(
                                     chat_id=posting_channel,
                                     text=rent_channel_message,
                                     # reply_markup=
                                 )
+                            with session:
+                                user_ad: Ad = session.query(Ad).filter_by(user_id=user_id, id=new_ad_id).first()
+                                user_ad.channel_message_id = channel_msg.id
+                                user_ad.channel_message_text = channel_msg.html_text if channel_msg.text else channel_msg.html_caption
+                                session.commit()
+                            # stop loop since we cant do more then 1 channel
+                            break
 
                         bot_answer_or_send(bot, call, __.rent_confirmed_ad_admin, show_alert=True, cache_time=5 * 1)
                         bot.delete_message(admin_id, call.message.id)

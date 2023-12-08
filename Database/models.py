@@ -26,12 +26,15 @@ class AdStatusEnum(EnumClass):
     pending = "pending"
     completed = "completed"
     canceled = "canceled"
+    expired = "expired"
 
 
 class Ad(Base):
     __tablename__ = 'ads'
 
     id = Column(Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
+    channel_message_id = Column(Integer, nullable=True)
+    channel_message_text = Column(String, nullable=True)
     ad_status = Column(Enum(AdStatusEnum), nullable=False, default=AdStatusEnum.pending)
     category = Column(String(100), nullable=False)
     data = Column(String, nullable=False)

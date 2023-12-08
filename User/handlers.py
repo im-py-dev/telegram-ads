@@ -2,7 +2,7 @@ import time
 
 # from User.reply_markups2 import select_city_markup2, end_date_markup2, contract_status_markup2, pricing_type_markup2, \
 #     pricing_markup2, description_markup2, photos_markup2, photo_markup2, ad_preview_markup2, rent_cancel_markup
-from config import ADMINS_IDS, force_subscribe_channels
+from config import ADMINS_IDS, force_subscribe_channels, posting_channels
 
 from telebot import TeleBot
 from telebot.apihelper import ApiTelegramException
@@ -144,6 +144,8 @@ def user_message(message: Message, bot: TeleBot):
     with Session() as session:
         # Check if the user already exists
         user = session.query(User).filter_by(id=user_id).first()
+        if not user:
+            return bot.send_message(text='/start', chat_id=user_id)
 
     __ = set_lang(user.language_code)
 
@@ -222,6 +224,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             'category': 'buying_cargo',
             'user_full_name': call.from_user.full_name,
             'product_name': '',
+            'from_to_city': '',
             'city': '',
             'city2': '',
             'load': '',
@@ -482,6 +485,34 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 }
             },
 
+            'buying_cargo': {
+                'template': __.buying_cargo_user_preview,
+                'template_replacer': {
+                    '[from_to_city]': user_data[user_id]['from_to_city'],
+                    '[start_date]': user_data[user_id]['start_date'],
+                    '[city]': user_data[user_id]['city'],
+                    '[city2]': user_data[user_id]['city2'],
+                    '[load]': user_data[user_id]['load'],
+                    '[price]': __.rent_agreemental if user_data[user_id]['price'] == __.rent_agreemental else format_number(
+                        user_data[user_id]['price']),
+                    '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
+                    user_data[user_id]['description'] else '',
+                }
+            },
+            'selling_cargo': {
+                'template': __.selling_cargo_user_preview,
+                'template_replacer': {
+                    '[from_to_city]': user_data[user_id]['from_to_city'],
+                    '[start_date]': user_data[user_id]['start_date'],
+                    '[city]': user_data[user_id]['city'],
+                    '[city2]': user_data[user_id]['city2'],
+                    '[load]': user_data[user_id]['load'],
+                    '[price]': __.rent_agreemental if user_data[user_id]['price'] == __.rent_agreemental else format_number(
+                        user_data[user_id]['price']),
+                    '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
+                    user_data[user_id]['description'] else '',
+                }
+            },
         }
         message_template_dict = user_templates_preview.get(user_data[user_id]['category'])
         # message_template_dict = categories_templates_preview.get(pending_ad.category)
@@ -642,6 +673,37 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                     }
                 },
+
+                'buying_cargo': {
+                    'template': __.buying_cargo_admin_preview,
+                    'template_replacer': {
+                        '[from_to_city]': ad_data['from_to_city'],
+                        '[start_date]': ad_data['start_date'],
+                        '[city]': ad_data['city'],
+                        '[city2]': ad_data['city2'],
+                        '[load]': ad_data['load'],
+                        '[price]': __.rent_agreemental if ad_data['price'] == __.rent_agreemental else format_number(
+                            ad_data['price']),
+                        '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                        ad_data['description'] else '',
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                    }
+                },
+                'selling_cargo': {
+                    'template': __.selling_cargo_admin_preview,
+                    'template_replacer': {
+                        '[from_to_city]': ad_data['from_to_city'],
+                        '[start_date]': ad_data['start_date'],
+                        '[city]': ad_data['city'],
+                        '[city2]': ad_data['city2'],
+                        '[load]': ad_data['load'],
+                        '[price]': __.rent_agreemental if ad_data['price'] == __.rent_agreemental else format_number(
+                            ad_data['price']),
+                        '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                        ad_data['description'] else '',
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                    }
+                },
             }
             message_template_dict = admin_templates_preview.get(user_data[user_id]['category'])
             # message_template_dict = categories_templates_preview.get(pending_ad.category)
@@ -710,7 +772,10 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'category': 'rent',
                 'user_full_name': call.from_user.full_name,
                 'product_name': '',
+                'from_to_city': '',
                 'city': '',
+                'city2': '',
+                'load': '',
                 'sub_city': '',
                 'start_date': '',
                 'end_date': '',
@@ -842,7 +907,10 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'category': 'room_rent',
                 'user_full_name': call.from_user.full_name,
                 'product_name': '',
+                'from_to_city': '',
                 'city': '',
+                'city2': '',
+                'load': '',
                 'sub_city': '',
                 'start_date': '',
                 'end_date': '',
@@ -986,7 +1054,10 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'category': 'room_applicant',
                 'user_full_name': call.from_user.full_name,
                 'product_name': '',
+                'from_to_city': '',
                 'city': '',
+                'city2': '',
+                'load': '',
                 'sub_city': '',
                 'start_date': '',
                 'end_date': '',
@@ -1091,7 +1162,10 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'category': 'home_applicant',
                 'user_full_name': call.from_user.full_name,
                 'product_name': '',
+                'from_to_city': '',
                 'city': '',
+                'city2': '',
+                'load': '',
                 'sub_city': '',
                 'start_date': '',
                 'end_date': '',
@@ -1206,7 +1280,10 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'category': 'meldezettel_applicant',
                 'user_full_name': call.from_user.full_name,
                 'product_name': '',
+                'from_to_city': '',
                 'city': '',
+                'city2': '',
+                'load': '',
                 'sub_city': '',
                 'start_date': '',
                 'end_date': '',
@@ -1299,7 +1376,10 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'category': 'meldezettel',
                 'user_full_name': call.from_user.full_name,
                 'product_name': '',
+                'from_to_city': '',
                 'city': '',
+                'city2': '',
+                'load': '',
                 'sub_city': '',
                 'start_date': '',
                 'end_date': '',
@@ -1456,7 +1536,11 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'category': 'selling_goods',
                 'product_name': '',
                 'user_full_name': call.from_user.full_name,
+                'product_name': '',
+                'from_to_city': '',
                 'city': '',
+                'city2': '',
+                'load': '',
                 'sub_city': '',
                 'start_date': '',
                 'end_date': '',
@@ -1563,7 +1647,10 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'category': 'buying_goods',
                 'user_full_name': call.from_user.full_name,
                 'product_name': '',
+                'from_to_city': '',
                 'city': '',
+                'city2': '',
+                'load': '',
                 'sub_city': '',
                 'start_date': '',
                 'end_date': '',
@@ -1629,7 +1716,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         @cancel_option
         def get_cargo_load(message, msg):
             try:
-                if message.text and float(message.text):
+                if message.text and int(message.text):
                     load = float(message.text)
                     user_data[user_id]['load'] = load
                     bot.edit_message_text(text=f'{__.buying_cargo_load_label} {load}', chat_id=user_id, message_id=msg.id, reply_markup=None)
@@ -1696,6 +1783,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'category': 'buying_cargo',
                 'user_full_name': call.from_user.full_name,
                 'product_name': '',
+                'from_to_city': '',
                 'city': '',
                 'city2': '',
                 'load': '',
@@ -1716,6 +1804,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             if value == 'buying_cargo_ia':
                 user_data[user_id]['city'] = __.buying_cargo_iran
                 user_data[user_id]['city2'] = __.buying_cargo_austria
+                user_data[user_id]['from_to_city'] = __.buying_cargo_ia
                 bot.edit_message_text(text=f'{__.buying_cargo_od_label} {__.buying_cargo_ia_btn}', chat_id=user_id,
                                       message_id=call.message.id, reply_markup=None)
 
@@ -1725,6 +1814,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             elif value == 'buying_cargo_ai':
                 user_data[user_id]['city'] = __.buying_cargo_austria
                 user_data[user_id]['city2'] = __.buying_cargo_iran
+                user_data[user_id]['from_to_city'] = __.buying_cargo_ai
                 bot.edit_message_text(text=f'{__.buying_cargo_od_label} {__.buying_cargo_ai_btn}', chat_id=user_id,
                                       message_id=call.message.id, reply_markup=None)
 
@@ -1800,8 +1890,244 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             user_data[user_id]['price'] = __.rent_agreemental
             bot.edit_message_text(text=f'{__.price_label}{__.rent_agreemental}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
 
-            msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
-            return bot.register_next_step_handler(call.message, get_description, msg)
+            msg = bot.send_message(user_id, __.buying_cargo_load)
+            return bot.register_next_step_handler(call.message, get_cargo_load, msg)
+
+            # msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
+            # return bot.register_next_step_handler(call.message, get_description, msg)
+
+        elif step_name == 'end_date':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['end_date'] = __.rent_agreemental
+            bot.edit_message_text(text=f'{__.end_date_label}{__.rent_agreemental}', chat_id=user_id,
+                                  message_id=call.message.id, reply_markup=None)
+
+            bot.send_message(user_id, __.rent_contract_status, reply_markup=contract_status_markup(__, category_key))
+
+        elif step_name == 'description':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['description'] = ''
+            # user_data[user_id]['photos'] = []
+            bot.edit_message_text(text=f'{__.description_label}{__.skip_btn}', chat_id=user_id,
+                                  message_id=call.message.id, reply_markup=None)
+
+            return ad_preview(call.message)
+
+        elif step_name == 'ad_preview':
+            if value == 'confirm':
+                bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+                return ad_confirm(call.message)
+            elif value == 'cancel':
+                bot.clear_step_handler(call.message)
+
+                if call.message.text:
+                    bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id,
+                                          reply_markup=None)
+                elif call.message.caption:
+                    bot.edit_message_caption(caption=__.rent_order_canceled, chat_id=user_id,
+                                             message_id=call.message.id, reply_markup=None)
+
+                # bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+                return bot.send_message(user_id, __.canceled_t, reply_markup=user_main_menu_markup(__))
+
+    elif call_str.startswith('SELLING_CARGO'):
+        category_key, step_name, value = call_str.split()
+        print(call_str)
+        print(category_key, step_name, value)
+
+        @cancel_option
+        def get_flight_date(message):
+            user_data[user_id]['start_date'] = message.text
+
+            msg = bot.send_message(message.from_user.id, __.buying_cargo_price, reply_markup=pricing_markup(__, category_key))
+            bot.register_next_step_handler(message, get_price, msg)
+
+        @cancel_option
+        def get_cargo_load(message, msg):
+            try:
+                if message.text and int(message.text):
+                    load = float(message.text)
+                    user_data[user_id]['load'] = load
+                    bot.edit_message_text(text=f'{__.buying_cargo_load_label} {load}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+
+                    msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
+                    return bot.register_next_step_handler(call.message, get_description, msg)
+
+            except Exception as r:
+                msg = bot.send_message(message.from_user.id, __.buying_cargo_load)
+                bot.register_next_step_handler(message, get_cargo_load, msg)
+
+        @cancel_option
+        def get_description(message, msg):
+            user_data[user_id]['description'] = ''
+            if message.text != __.skip_btn:
+                user_data[user_id]['description'] = message.text
+
+            bot.edit_message_text(text=f'{__.description_label}{message.text}', chat_id=user_id, message_id=msg.id,
+                                  reply_markup=None)
+            return ad_preview(call.message)
+
+        @cancel_option
+        def get_from_city_other(message, message_to_edit):
+            user_data[user_id]['city'] = message.text
+            bot.edit_message_text(text=f'{__.buying_cargo_origin_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
+
+            bot.send_message(user_id, __.buying_cargo_destination, reply_markup=buying_cargo_to_austria_markup(__, category_key))
+
+        @cancel_option
+        def get_to_city_other(message, message_to_edit):
+            user_data[user_id]['city2'] = message.text
+            bot.edit_message_text(text=f'{__.buying_cargo_destination_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
+
+            msg = bot.send_message(user_id, __.buying_cargo_flight_date, reply_markup=None)
+            bot.register_next_step_handler(call.message, get_flight_date)
+
+        @cancel_option
+        def get_price(message, msg):
+            try:
+                if message.text and float(message.text):
+                    price = float(message.text)
+                    user_data[user_id]['price'] = price
+                    bot.edit_message_text(text=f'{__.price_label}{price}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+
+                    msg = bot.send_message(message.from_user.id, __.buying_cargo_load)
+                    bot.register_next_step_handler(message, get_cargo_load, msg)
+            except Exception as r:
+                msg = bot.send_message(message.from_user.id, __.buying_cargo_price, reply_markup=pricing_markup(__, category_key))
+                bot.register_next_step_handler(message, get_price)
+
+        if step_name == 'start':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            city_markup = select_2city_markup(__, category_key)
+            bot.delete_message(chat_id=user_id, message_id=call.message.id)
+            # bot.edit_message_text(text=__.rent_t1, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+            # bot.edit_message_reply_markup(chat_id=user_id, message_id=call.message.id, reply_markup=cancel_markup(__))
+            bot.send_message(user_id, __.selling_cargo_t1, reply_markup=cancel_markup(__))
+            time.sleep(0.2)
+            msg = bot.send_message(user_id, __.selling_cargo_t2, reply_markup=city_markup)
+            # bot.add_data(user_id)
+            user_data[user_id] = {
+                'id': f'{user_id}_{call.message.id}',
+                'uid': user_id,
+                'category': 'selling_cargo',
+                'user_full_name': call.from_user.full_name,
+                'product_name': '',
+                'from_to_city': '',
+                'city': '',
+                'city2': '',
+                'load': '',
+                'sub_city': '',
+                'start_date': '',
+                'end_date': '',
+                'contract_status': '',
+                'pricing_type': '',
+                'price': '',
+                'description': '',
+                'photos': [],
+            }
+
+        elif step_name == 'from_to_city':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            if value == 'buying_cargo_ia':
+                user_data[user_id]['city'] = __.buying_cargo_iran
+                user_data[user_id]['city2'] = __.buying_cargo_austria
+                user_data[user_id]['from_to_city'] = __.buying_cargo_ia
+                bot.edit_message_text(text=f'{__.buying_cargo_od_label} {__.buying_cargo_ia_btn}', chat_id=user_id,
+                                      message_id=call.message.id, reply_markup=None)
+
+                msg = bot.send_message(user_id, __.buying_cargo_origin,
+                                       reply_markup=buying_cargo_from_iran_markup(__, category_key))
+
+            elif value == 'buying_cargo_ai':
+                user_data[user_id]['city'] = __.buying_cargo_austria
+                user_data[user_id]['city2'] = __.buying_cargo_iran
+                user_data[user_id]['from_to_city'] = __.buying_cargo_ai
+                bot.edit_message_text(text=f'{__.buying_cargo_od_label} {__.buying_cargo_ai_btn}', chat_id=user_id,
+                                      message_id=call.message.id, reply_markup=None)
+
+                msg = bot.send_message(user_id, __.buying_cargo_origin,
+                                       reply_markup=buying_cargo_from_austria_markup(__, category_key))
+
+        elif step_name == 'from_iran':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            if value == 'other':
+                bot.edit_message_text(text=__.rent_other_city, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+                bot.register_next_step_handler(call.message, get_from_city_other, call.message)
+
+            else:
+                city = getattr(__, value)
+                user_data[user_id]['city'] = city
+                bot.edit_message_text(text=f'{__.buying_cargo_origin_label} {city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
+
+                msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=buying_cargo_to_austria_markup(__, category_key))
+
+        elif step_name == 'from_austria':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            if value == 'other':
+                bot.edit_message_text(text=__.rent_other_city, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+                bot.register_next_step_handler(call.message, get_from_city_other, call.message)
+
+            else:
+                city = getattr(__, value)
+                user_data[user_id]['city'] = city
+                bot.edit_message_text(text=f'{__.buying_cargo_origin_label} {city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
+
+                msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=buying_cargo_to_iran_markup(__, category_key))
+
+        elif step_name == 'to_austria':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            if value == 'other':
+                bot.edit_message_text(text=__.rent_other_city, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+                bot.register_next_step_handler(call.message, get_to_city_other, call.message)
+            else:
+                city = getattr(__, value)
+                user_data[user_id]['city2'] = city
+                bot.edit_message_text(text=f'{__.buying_cargo_destination_label} {city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
+
+                msg = bot.send_message(user_id, __.buying_cargo_flight_date, reply_markup=None)
+                bot.register_next_step_handler(call.message, get_flight_date)
+                # bot.register_next_step_handler(msg, get_sub_city)
+
+        elif step_name == 'to_iran':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            if value == 'other':
+                bot.edit_message_text(text=__.rent_other_city, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+                bot.register_next_step_handler(call.message, get_to_city_other, call.message)
+            else:
+                city = getattr(__, value)
+                user_data[user_id]['city2'] = city
+                bot.edit_message_text(text=f'{__.buying_cargo_destination_label} {city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
+
+                msg = bot.send_message(user_id, __.buying_cargo_flight_date, reply_markup=None)
+                bot.register_next_step_handler(call.message, get_flight_date)
+                # bot.register_next_step_handler(msg, get_sub_city)
+
+        elif step_name == 'pricing':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['price'] = __.rent_agreemental
+            bot.edit_message_text(text=f'{__.price_label}{__.rent_agreemental}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
+
+            msg = bot.send_message(user_id, __.buying_cargo_load)
+            return bot.register_next_step_handler(call.message, get_cargo_load, msg)
+
+            # msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
+            # return bot.register_next_step_handler(call.message, get_description, msg)
 
         elif step_name == 'end_date':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
@@ -2062,81 +2388,69 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
             },
 
+            'buying_cargo': {
+                'template': __.buying_cargo_user_view_ad,
+                'template_replacer': {
+                    '[from_to_city]': ad_data['from_to_city'],
+                    '[start_date]': ad_data['start_date'],
+                    '[city]': ad_data['city'],
+                    '[city2]': ad_data['city2'],
+                    '[load]': ad_data['load'],
+                    '[price]': __.rent_agreemental if ad_data['price'] == __.rent_agreemental else format_number(ad_data['price']),
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
+                }
+            },
+            'selling_cargo': {
+                'template': __.selling_cargo_user_view_ad,
+                'template_replacer': {
+                    '[from_to_city]': ad_data['from_to_city'],
+                    '[start_date]': ad_data['start_date'],
+                    '[city]': ad_data['city'],
+                    '[city2]': ad_data['city2'],
+                    '[load]': ad_data['load'],
+                    '[price]': __.rent_agreemental if ad_data['price'] == __.rent_agreemental else format_number(ad_data['price']),
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
+                }
+            },
+
         }
-
         message_template_dict = categories_templates_view_ad.get(user_ad.category)
-
         message_template_str = message_template_dict['template']
-
         message_template_replacer = message_template_dict['template_replacer']
-
         message_template = formatted(message_template_str, message_template_replacer)
 
-        if ads_state == 'pending':
+        return bot.edit_message_text(
+            text=message_template,
+            chat_id=user_id,
+            message_id=call.message.id,
+            reply_markup=my_ads_markup(__, user_id, user_ad, len(user_ads))
+        )
 
-            # user_ad = user_ads[0]
-
-            # ad_data: dict = json.loads(user_ad.data)
-
-            #             message_template = f"""
-
-            # City: {ad_data.get('city')}
-
-            # Distirict: {ad_data.get('sub_city')}
-
-            # Start Date: {ad_data.get('start_date')}
-
-            # End Date: {ad_data.get('end_date')}
-
-            # Status: {ad_data.get('contract_status')}
-
-            # Pricing: {ad_data.get('pricing_type')}
-
-            # Price: {ad_data.get('price')}
-
-            # Description: {ad_data.get('description')}
-
-            # """
-
-            return bot.edit_message_text(
-
-                text=message_template,
-
-                chat_id=user_id,
-
-                message_id=call.message.id,
-
-                reply_markup=my_ads_markup(__, user_id, user_ad, len(user_ads))
-
-            )
-
-        elif ads_state == 'completed':
-
-            return bot.edit_message_text(
-
-                text=message_template,
-
-                chat_id=user_id,
-
-                message_id=call.message.id,
-
-                reply_markup=my_ads_markup(__, user_id, user_ad, len(user_ads))
-
-            )
-
-        elif ads_state == 'canceled':
-
-            return bot.edit_message_text(
-
-                text=message_template,
-
-                chat_id=user_id,
-
-                message_id=call.message.id,
-
-                reply_markup=my_ads_markup(__, user_id, user_ad, len(user_ads))
-
-            )
+        # if ads_state == 'pending':
+        #     return bot.edit_message_text(
+        #         text=message_template,
+        #         chat_id=user_id,
+        #         message_id=call.message.id,
+        #         reply_markup=my_ads_markup(__, user_id, user_ad, len(user_ads))
+        #     )
+        #
+        # elif ads_state == 'completed':
+        #     return bot.edit_message_text(
+        #         text=message_template,
+        #         chat_id=user_id,
+        #         message_id=call.message.id,
+        #         reply_markup=my_ads_markup(__, user_id, user_ad, len(user_ads))
+        #     )
+        #
+        # elif ads_state == 'canceled':
+        #     return bot.edit_message_text(
+        #         text=message_template,
+        #         chat_id=user_id,
+        #         message_id=call.message.id,
+        #         reply_markup=my_ads_markup(__, user_id, user_ad, len(user_ads))
+        #     )
 
     elif call_str.startswith('AD_FORWARD'):
 
@@ -2161,13 +2475,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
         ad_data: dict = json.loads(next_ad.data)
 
-        price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data[
+        price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} {__.euros_per} #{ad_data['pricing_type']}"
 
-                                                                   'price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} {__.euros_per} #{ad_data['pricing_type']}"
-
-        price_line2 = f"{__.price_eye}{__.rent_agreemental}" if ad_data[
-
-                                                                    'price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])}"
+        price_line2 = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])}"
 
         categories_templates_view_ad = {
 
@@ -2371,6 +2681,35 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
             },
 
+            'buying_cargo': {
+                'template': __.buying_cargo_user_view_ad,
+                'template_replacer': {
+                    '[from_to_city]': ad_data['from_to_city'],
+                    '[start_date]': ad_data['start_date'],
+                    '[city]': ad_data['city'],
+                    '[city2]': ad_data['city2'],
+                    '[load]': ad_data['load'],
+                    '[price]': __.rent_agreemental if ad_data['price'] == __.rent_agreemental else format_number(
+                        ad_data['price']),
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
+                }
+            },
+
+            'selling_cargo': {
+                'template': __.selling_cargo_user_view_ad,
+                'template_replacer': {
+                    '[from_to_city]': ad_data['from_to_city'],
+                    '[start_date]': ad_data['start_date'],
+                    '[city]': ad_data['city'],
+                    '[city2]': ad_data['city2'],
+                    '[load]': ad_data['load'],
+                    '[price]': __.rent_agreemental if ad_data['price'] == __.rent_agreemental else format_number(
+                        ad_data['price']),
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
+                }
+            },
         }
 
         message_template_dict = categories_templates_view_ad.get(next_ad.category)
@@ -2413,13 +2752,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
         ad_data: dict = json.loads(next_ad.data)
 
-        price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data[
+        price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} {__.euros_per} #{ad_data['pricing_type']}"
 
-                                                                   'price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} {__.euros_per} #{ad_data['pricing_type']}"
-
-        price_line2 = f"{__.price_eye}{__.rent_agreemental}" if ad_data[
-
-                                                                    'price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])}"
+        price_line2 = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])}"
 
         categories_templates_view_ad = {
 
@@ -2623,6 +2958,35 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
             },
 
+            'buying_cargo': {
+                'template': __.buying_cargo_user_view_ad,
+                'template_replacer': {
+                    '[from_to_city]': ad_data['from_to_city'],
+                    '[start_date]': ad_data['start_date'],
+                    '[city]': ad_data['city'],
+                    '[city2]': ad_data['city2'],
+                    '[load]': ad_data['load'],
+                    '[price]': __.rent_agreemental if ad_data['price'] == __.rent_agreemental else format_number(
+                        ad_data['price']),
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
+                }
+            },
+            'selling_cargo': {
+                'template': __.selling_cargo_user_view_ad,
+                'template_replacer': {
+                    '[from_to_city]': ad_data['from_to_city'],
+                    '[start_date]': ad_data['start_date'],
+                    '[city]': ad_data['city'],
+                    '[city2]': ad_data['city2'],
+                    '[load]': ad_data['load'],
+                    '[price]': __.rent_agreemental if ad_data['price'] == __.rent_agreemental else format_number(
+                        ad_data['price']),
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
+                }
+            },
+
         }
 
         message_template_dict = categories_templates_view_ad.get(next_ad.category)
@@ -2661,12 +3025,49 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                     bot_answer_or_send(bot, call, '', show_alert=False, cache_time=1)
                     return bot.send_message(user_id, __.pending_ad_deleted, reply_markup=user_main_menu_markup(__))
                 else:
-                    bot.send_message(user_id, __.error3)
+                    bot.send_message(user_id, __.ad_delete_error)
 
         # AD_DELETE {user_id} {user_ad.id}
         _, user_id, ad_id = call_str.split()
         bot.send_message(user_id, __.rent_confirm_delete_ad, reply_markup=confirm_delete_ad_markup(__))
         bot.register_next_step_handler(call.message, confirm_delete_ad)
+
+    elif call_str.startswith('AD_EXPIRE'):
+        def confirm_expire_ad(message):
+            def clean(main_text, text_to_delete_its_line):
+                lines = main_text.split('\n')
+                cleaned_lines = [line for line in lines if text_to_delete_its_line not in line]
+                result = '\n'.join(cleaned_lines)
+                return result
+
+            if message.text == __.cancel_t:
+                bot_answer_or_send(bot, call, '', cache_time=2)
+                return bot.send_message(user_id, __.canceled_t, reply_markup=user_main_menu_markup(__))
+            with session:
+                ad: Ad = session.query(Ad).filter_by(user=user, id=ad_id).first()
+                ad_data: dict = json.loads(ad.data)
+                if ad and ad.ad_status.name == 'completed':
+                    ad.ad_status = 'expired'
+                    new_ad_text_no_contact = clean(ad.channel_message_text, "tg://user?id")
+                    new_text = new_ad_text_no_contact + '\n\n' + __.ad_expired_line
+
+                    if ad_data['photos']:
+                        bot.edit_message_caption(caption=new_text, chat_id=posting_channels[0], message_id=ad.channel_message_id)
+                    else:
+                        bot.edit_message_text(text=new_text, chat_id=posting_channels[0], message_id=ad.channel_message_id)
+
+                    session.commit()
+
+                    bot.delete_message(user_id, call.message.id)
+                    bot_answer_or_send(bot, call, '', show_alert=False, cache_time=1)
+                    return bot.send_message(user_id, __.ad_expired, reply_markup=user_main_menu_markup(__))
+                else:
+                    bot.send_message(user_id, __.ad_expired_error)
+
+        # AD_DELETE {user_id} {user_ad.id}
+        _, user_id, ad_id = call_str.split()
+        bot.send_message(user_id, __.rent_confirm_expire_ad, reply_markup=confirm_delete_ad_markup(__))
+        bot.register_next_step_handler(call.message, confirm_expire_ad)
 
 
 def user_help(message, bot):
