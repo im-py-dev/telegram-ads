@@ -127,9 +127,12 @@ sessions_path = os.path.join(PROJECT_PATH, 'sessions')
 session_name = os.getenv('CLIENT_NAME')
 file_path = os.path.join(sessions_path, f'{session_name}.session')
 
-if not os.path.isfile(file_path):
-    print("Sission Not Found, Create new one...")
+if not os.path.isdir(sessions_path):
     os.mkdir(sessions_path)
+    print("Sessions Folder Not Found, Create new one...")
+
+if not os.path.isfile(file_path):
+    print("Session Not Found, Create new one...")
     telethon_client = asyncio.run(main())
     print("Session created, please restart the app now")
     exit()
