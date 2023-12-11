@@ -49,13 +49,21 @@ def ads_catygories_markup(__: STR, user_id):
          ],
 
         [
-            InlineKeyboardButton(__.selling_goods_btn, callback_data=f'SELLING_GOODS start value'),
             InlineKeyboardButton(__.buying_goods_btn, callback_data=f'BUYING_GOODS start value'),
+            InlineKeyboardButton(__.selling_goods_btn, callback_data=f'SELLING_GOODS start value'),
          ],
 
         [
-            InlineKeyboardButton(__.selling_cargo_btn, callback_data=f'SELLING_CARGO start value'),
             InlineKeyboardButton(__.buying_cargo_btn, callback_data=f'BUYING_CARGO start value'),
+            InlineKeyboardButton(__.selling_cargo_btn, callback_data=f'SELLING_CARGO start value'),
+        ],
+        [
+            InlineKeyboardButton(__.buying_euro_btn, callback_data=f'BUYING_EURO start value'),
+            InlineKeyboardButton(__.selling_euro_btn, callback_data=f'SELLING_EURO start value'),
+        ],
+        [
+            InlineKeyboardButton(__.services_btn, callback_data=f'SERVICES start value'),
+            InlineKeyboardButton(__.needs_btn, callback_data=f'NEEDS start value'),
         ],
     ]
 

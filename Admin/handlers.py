@@ -378,6 +378,27 @@ def admin_message(message, bot: TeleBot):
                             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                         }
                     },
+
+                    'buying_euro': {
+                        'template': __.buying_euro_admin_preview,
+                        'template_replacer': {
+                        '[euros]': ad_data['euros'],
+                        '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
+                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                        '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                    }
+                    },
+                    'selling_euro': {
+                        'template': __.selling_euro_admin_preview,
+                        'template_replacer': {
+                        '[euros]': ad_data['euros'],
+                        '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
+                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                        '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                    }
+                    },
                 }
 
                 # price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} {__.euros_per} #{ad_data['pricing_type']}"
@@ -708,6 +729,27 @@ def admin_callback_query(call, bot: TeleBot):
                                         ad_data['price']),
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                                     ad_data['description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+
+                            'buying_euro': {
+                                'template': __.buying_euro_channel_message,
+                                'template_replacer': {
+                                    '[euros]': ad_data['euros'],
+                                    '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
+                                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+                            'selling_euro': {
+                                'template': __.selling_euro_channel_message,
+                                'template_replacer': {
+                                    '[euros]': ad_data['euros'],
+                                    '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
+                                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
                             },

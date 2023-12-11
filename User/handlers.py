@@ -218,25 +218,25 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
     user_id = call.from_user.id
     call_str = call.data
 
-    user_data.setdefault(user_id, {
-            'id': f'{user_id}_{call.message.id}',
-            'uid': user_id,
-            'category': 'buying_cargo',
-            'user_full_name': call.from_user.full_name,
-            'product_name': '',
-            'from_to_city': '',
-            'city': '',
-            'city2': '',
-            'load': '',
-            'sub_city': '',
-            'start_date': '',
-            'end_date': '',
-            'contract_status': '',
-            'pricing_type': '',
-            'price': '',
-            'description': '',
-            'photos': [],
-        })
+    # user_data.setdefault(user_id, {
+    #         'id': f'{user_id}_{call.message.id}',
+    #         'uid': user_id,
+    #         'category': 'buying_cargo',
+    #         'user_full_name': call.from_user.full_name,
+    #         'product_name': '',
+    #         'from_to_city': '',
+    #         'city': '',
+    #         'city2': '',
+    #         'load': '',
+    #         'sub_city': '',
+    #         'start_date': '',
+    #         'end_date': '',
+    #         'contract_status': '',
+    #         'pricing_type': '',
+    #         'price': '',
+    #         'description': '',
+    #         'photos': [],
+    #     })
 
     def cancel_option(func):
         def wrapper(message: Message, *args, **kwargs):
@@ -267,14 +267,26 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
     def get_sub_city(message):
         user_data[user_id]['sub_city'] = message.text
 
-        bot.send_message(user_id, __.rent_start_date, reply_markup=None)
+        # Get the date of tomorrow
+        tomorrow = datetime.now() + timedelta(days=1)
+        # Format the date in dd/mm/yyyy
+        formatted_date = tomorrow.strftime("%d/%m/%Y")
+        message_text = formatted(__.rent_start_date, {'[automatic_tomorrow_date]': formatted_date})
+
+        bot.send_message(user_id, message_text, reply_markup=None)
         bot.register_next_step_handler(message, get_start_date)
 
     @cancel_option
     def get_start_date(message):
         user_data[user_id]['start_date'] = message.text
 
-        msg = bot.send_message(message.from_user.id, __.rent_end_date, reply_markup=end_date_markup(__, category_key))
+        # Get the date of tomorrow
+        tomorrow = datetime.now() + timedelta(days=1)
+        # Format the date in dd/mm/yyyy
+        formatted_date = tomorrow.strftime("%d/%m/%Y")
+        message_text = formatted(__.rent_end_date, {'[automatic_tomorrow_date]': formatted_date})
+
+        msg = bot.send_message(message.from_user.id, message_text, reply_markup=end_date_markup(__, category_key))
         bot.register_next_step_handler(message, get_end_date, msg)
 
     @cancel_option
@@ -513,6 +525,33 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                     user_data[user_id]['description'] else '',
                 }
             },
+
+            'buying_euro': {
+                'template': __.buying_euro_user_preview,
+                'template_replacer': {
+                    '[euros]': user_data[user_id]['euros'],
+                    '[toman_per_euro]': __.rent_agreemental if user_data[user_id]['toman_per_euro'] == __.rent_agreemental else format_number(
+                        user_data[user_id]['toman_per_euro']),
+                    '[payment_methods]': ' '.join(map(
+                        lambda i: f'#{getattr(__, i)}',
+                        user_data[user_id]['payment_methods'])) + f" {user_data[user_id].get('payment_methods_other')}" if user_data[user_id].get('payment_methods_other') else "",
+                    '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
+                    user_data[user_id]['description'] else '',
+                }
+            },
+            'selling_euro': {
+                'template': __.selling_euro_user_preview,
+                'template_replacer': {
+                    '[euros]': user_data[user_id]['euros'],
+                    '[toman_per_euro]': __.rent_agreemental if user_data[user_id]['toman_per_euro'] == __.rent_agreemental else format_number(
+                        user_data[user_id]['toman_per_euro']),
+                    '[payment_methods]': ' '.join(map(
+                        lambda i: f'#{getattr(__, i)}',
+                        user_data[user_id]['payment_methods'])) + f" {user_data[user_id].get('payment_methods_other')}" if user_data[user_id].get('payment_methods_other') else "",
+                    '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
+                    user_data[user_id]['description'] else '',
+                }
+            },
         }
         message_template_dict = user_templates_preview.get(user_data[user_id]['category'])
         # message_template_dict = categories_templates_preview.get(pending_ad.category)
@@ -704,6 +743,27 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                     }
                 },
+
+                'buying_euro': {
+                    'template': __.buying_euro_admin_preview,
+                    'template_replacer': {
+                        '[euros]': ad_data['euros'],
+                        '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
+                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                        '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                    }
+                },
+                'selling_euro': {
+                    'template': __.selling_euro_admin_preview,
+                    'template_replacer': {
+                        '[euros]': ad_data['euros'],
+                        '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
+                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                        '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                    }
+                },
             }
             message_template_dict = admin_templates_preview.get(user_data[user_id]['category'])
             # message_template_dict = categories_templates_preview.get(pending_ad.category)
@@ -782,6 +842,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'contract_status': '',
                 'pricing_type': '',
                 'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
                 'description': '',
                 'photos': [],
             }
@@ -917,6 +980,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'contract_status': '',
                 'pricing_type': '',
                 'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
                 'description': '',
                 'photos': [],
             }
@@ -1064,6 +1130,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'contract_status': '',
                 'pricing_type': '',
                 'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
                 'description': '',
                 'photos': [],
             }
@@ -1172,6 +1241,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'contract_status': '',
                 'pricing_type': '',
                 'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
                 'description': '',
                 'photos': [],
             }
@@ -1290,6 +1362,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'contract_status': '',
                 'pricing_type': '',
                 'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
                 'description': '',
                 'photos': [],
             }
@@ -1386,6 +1461,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'contract_status': '',
                 'pricing_type': '',
                 'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
                 'description': '',
                 'photos': [],
             }
@@ -1536,7 +1614,6 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'category': 'selling_goods',
                 'product_name': '',
                 'user_full_name': call.from_user.full_name,
-                'product_name': '',
                 'from_to_city': '',
                 'city': '',
                 'city2': '',
@@ -1547,6 +1624,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'contract_status': '',
                 'pricing_type': '',
                 'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
                 'description': '',
                 'photos': [],
             }
@@ -1657,6 +1737,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'contract_status': '',
                 'pricing_type': '',
                 'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
                 'description': '',
                 'photos': [],
             }
@@ -1793,6 +1876,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'contract_status': '',
                 'pricing_type': '',
                 'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
                 'description': '',
                 'photos': [],
             }
@@ -2026,6 +2112,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'contract_status': '',
                 'pricing_type': '',
                 'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
                 'description': '',
                 'photos': [],
             }
@@ -2167,6 +2256,400 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 # bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id, reply_markup=None)
                 return bot.send_message(user_id, __.canceled_t, reply_markup=user_main_menu_markup(__))
 
+    elif call_str.startswith('BUYING_EURO'):
+        @cancel_option
+        def get_euros(message, msg):
+            try:
+                if message.text and int(message.text):
+                    euros = int(message.text)
+                    user_data[user_id]['euros'] = euros
+                    bot.edit_message_text(text=f'{__.price_label}{euros}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+
+                    msg = bot.send_message(message.from_user.id, __.buying_euro_tomans, reply_markup=tomans_markup(__, category_key))
+                    bot.register_next_step_handler(message, get_tomans, msg)
+            except Exception as r:
+                msg = bot.send_message(message.from_user.id, __.rent_price)
+                bot.register_next_step_handler(message, get_euros, msg)
+
+        @cancel_option
+        def get_tomans(message, msg):
+            try:
+                if message.text and int(message.text):
+                    toman_per_euro = int(message.text)
+                    user_data[user_id]['toman_per_euro'] = toman_per_euro
+                    bot.edit_message_text(text=f'{__.toman_per_euro_label}{toman_per_euro}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+
+                    transfer_methods = {
+                        'euro_transfer_1': 0,
+                        'euro_transfer_2': 0,
+                        'euro_transfer_3': 0,
+                        'euro_transfer_4': 0,
+                        'euro_transfer_5': 0,
+                        'euro_transfer_6': 0,
+                        'euro_transfer_7': 0,
+                        # 'euro_transfer_8': 0,
+                    }
+                    msg = bot.send_message(user_id, __.buying_euro_transfer, reply_markup=transfer_markup(__, category_key, transfer_methods))
+                    # bot.register_next_step_handler(message, get_transfer, msg)
+            except Exception as r:
+                print(r)
+                msg = bot.send_message(message.from_user.id, __.buying_euro_tomans)
+                bot.register_next_step_handler(message, get_tomans, msg)
+
+        category_key, step_name, value, *_ = call_str.split()
+        print(call_str)
+        print(category_key, step_name, value)
+
+        @cancel_option
+        def get_description(message, msg):
+            user_data[user_id]['description'] = message.text
+
+            bot.edit_message_text(text=f'{__.description_label}{message.text}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+            return ad_preview(call.message)
+
+        if step_name == 'start':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            city_markup = select_city_markup(__, category_key)
+            bot.delete_message(chat_id=user_id, message_id=call.message.id)
+            bot.send_message(user_id, __.buying_euro_t1, reply_markup=cancel_markup(__))
+            time.sleep(0.2)
+            msg = bot.send_message(user_id, __.buying_euro_t2)
+            user_data[user_id] = {
+                'id': f'{user_id}_{call.message.id}',
+                'uid': user_id,
+                'category': 'buying_euro',
+                'user_full_name': call.from_user.full_name,
+                'product_name': '',
+                'from_to_city': '',
+                'city': '',
+                'city2': '',
+                'load': '',
+                'sub_city': '',
+                'start_date': '',
+                'end_date': '',
+                'contract_status': '',
+                'pricing_type': '',
+                'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
+                'description': '',
+                'photos': [],
+            }
+            bot.register_next_step_handler(msg, get_euros, msg)
+
+        elif step_name == 'tomans':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['toman_per_euro'] = __.rent_agreemental
+            bot.edit_message_text(text=f'{__.toman_per_euro_label}{__.rent_agreemental}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
+            transfer_methods = {
+                'euro_transfer_1': 0,
+                'euro_transfer_2': 0,
+                'euro_transfer_3': 0,
+                'euro_transfer_4': 0,
+                'euro_transfer_5': 0,
+                'euro_transfer_6': 0,
+                'euro_transfer_7': 0,
+                # 'euro_transfer_8': 0,
+            }
+            msg = bot.send_message(user_id, __.buying_euro_transfer, reply_markup=transfer_markup(__, category_key, transfer_methods))
+            # return bot.register_next_step_handler(call.message, get_transfer, msg)
+
+        elif step_name == 'transfer':
+            *_, payment_name, payment_state = call_str.split()
+
+            if payment_name == 'NEXT':
+                bot.edit_message_text(text=__.rent_description, chat_id=user_id, message_id=call.message.id, reply_markup=description_markup(__, category_key))
+                return bot.register_next_step_handler(call.message, get_description, call.message)
+
+            elif payment_name == 'OTHER':
+                def handle_other_transfer(message, ):
+                    user_data[user_id]['payment_methods_other'] = message.text
+
+                    transfer_methods = {
+                        'euro_transfer_1': 0,
+                        'euro_transfer_2': 0,
+                        'euro_transfer_3': 0,
+                        'euro_transfer_4': 0,
+                        'euro_transfer_5': 0,
+                        'euro_transfer_6': 0,
+                        'euro_transfer_7': 0,
+                        # 'euro_transfer_8': 0,
+                    }
+                    for _ in user_data[user_id]['payment_methods']:
+                        try:
+                            getattr(__, _)
+                            transfer_methods[_] = 1
+                        except AttributeError:
+                            continue
+
+                    bot.edit_message_reply_markup(
+                        chat_id=user_id,
+                        message_id=call.message.id,
+                        reply_markup=transfer_markup(__, category_key, transfer_methods, other_done=True)
+                    )
+                    bot.send_message(user_id, f'{__.other_transfer_label_set} {message.text}')
+                    return bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+
+                if user_data[user_id].get('payment_methods_other'):
+                    return bot_answer_or_send(bot, call, 'ALREADY SELECTED!', show_alert=True, cache_time=2)
+
+                bot.send_message(user_id, __.other_transfer_label)
+                return bot.register_next_step_handler(call.message, handle_other_transfer)
+
+            else:
+                if payment_state == '1':
+                    user_data[user_id]['payment_methods'].remove(payment_name)
+
+                elif payment_state == '0':
+                    user_data[user_id]['payment_methods'].append(payment_name)
+
+                transfer_methods = {
+                    'euro_transfer_1': 0,
+                    'euro_transfer_2': 0,
+                    'euro_transfer_3': 0,
+                    'euro_transfer_4': 0,
+                    'euro_transfer_5': 0,
+                    'euro_transfer_6': 0,
+                    'euro_transfer_7': 0,
+                    # 'euro_transfer_8': 0,
+                }
+                for _ in user_data[user_id]['payment_methods']:
+                    try:
+                        getattr(__, _)
+                        transfer_methods[_] = 1
+                    except AttributeError:
+                        continue
+
+                bot.edit_message_reply_markup(
+                    chat_id=user_id,
+                    message_id=call.message.id,
+                    reply_markup=transfer_markup(__, category_key, transfer_methods)
+                )
+                return bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+
+        elif step_name == 'description':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['description'] = ''
+            bot.edit_message_text(text=f'{__.description_label}{__.skip_btn}', chat_id=user_id,
+                                  message_id=call.message.id, reply_markup=None)
+
+            return ad_preview(call.message)
+            # bot.send_message(user_id, __.rent_photos, reply_markup=photos_markup(__, category_key))
+            # return bot.register_next_step_handler(call.message, get_photos)
+
+        elif step_name == 'ad_preview':
+            if value == 'confirm':
+                bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+                return ad_confirm(call.message)
+            elif value == 'cancel':
+                bot.clear_step_handler(call.message)
+                bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id,
+                                      reply_markup=None)
+                return bot.send_message(user_id, __.canceled_t, reply_markup=user_main_menu_markup(__))
+
+    elif call_str.startswith('SELLING_EURO'):
+        @cancel_option
+        def get_euros(message, msg):
+            try:
+                if message.text and int(message.text):
+                    euros = int(message.text)
+                    user_data[user_id]['euros'] = euros
+                    bot.edit_message_text(text=f'{__.price_label}{euros}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+
+                    msg = bot.send_message(message.from_user.id, __.selling_euro_tomans, reply_markup=tomans_markup(__, category_key))
+                    bot.register_next_step_handler(message, get_tomans, msg)
+            except Exception as r:
+                msg = bot.send_message(message.from_user.id, __.rent_price)
+                bot.register_next_step_handler(message, get_euros, msg)
+
+        @cancel_option
+        def get_tomans(message, msg):
+            try:
+                if message.text and int(message.text):
+                    toman_per_euro = int(message.text)
+                    user_data[user_id]['toman_per_euro'] = toman_per_euro
+                    bot.edit_message_text(text=f'{__.toman_per_euro_label}{toman_per_euro}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+
+                    transfer_methods = {
+                        'euro_transfer_1': 0,
+                        'euro_transfer_2': 0,
+                        'euro_transfer_3': 0,
+                        'euro_transfer_4': 0,
+                        'euro_transfer_5': 0,
+                        'euro_transfer_6': 0,
+                        'euro_transfer_7': 0,
+                        # 'euro_transfer_8': 0,
+                    }
+                    msg = bot.send_message(user_id, __.selling_euro_transfer, reply_markup=transfer_markup(__, category_key, transfer_methods))
+                    # bot.register_next_step_handler(message, get_transfer, msg)
+            except Exception as r:
+                print(r)
+                msg = bot.send_message(message.from_user.id, __.selling_euro_tomans)
+                bot.register_next_step_handler(message, get_tomans, msg)
+
+        category_key, step_name, value, *_ = call_str.split()
+        print(call_str)
+        print(category_key, step_name, value)
+
+        @cancel_option
+        def get_description(message, msg):
+            user_data[user_id]['description'] = message.text
+
+            bot.edit_message_text(text=f'{__.description_label}{message.text}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+            return ad_preview(call.message)
+
+        if step_name == 'start':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            city_markup = select_city_markup(__, category_key)
+            bot.delete_message(chat_id=user_id, message_id=call.message.id)
+            bot.send_message(user_id, __.selling_euro_t1, reply_markup=cancel_markup(__))
+            time.sleep(0.2)
+            msg = bot.send_message(user_id, __.selling_euro_t2)
+            user_data[user_id] = {
+                'id': f'{user_id}_{call.message.id}',
+                'uid': user_id,
+                'category': 'selling_euro',
+                'user_full_name': call.from_user.full_name,
+                'product_name': '',
+                'from_to_city': '',
+                'city': '',
+                'city2': '',
+                'load': '',
+                'sub_city': '',
+                'start_date': '',
+                'end_date': '',
+                'contract_status': '',
+                'pricing_type': '',
+                'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
+                'description': '',
+                'photos': [],
+            }
+            bot.register_next_step_handler(msg, get_euros, msg)
+
+        elif step_name == 'tomans':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['toman_per_euro'] = __.rent_agreemental
+            bot.edit_message_text(text=f'{__.toman_per_euro_label}{__.rent_agreemental}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
+            transfer_methods = {
+                'euro_transfer_1': 0,
+                'euro_transfer_2': 0,
+                'euro_transfer_3': 0,
+                'euro_transfer_4': 0,
+                'euro_transfer_5': 0,
+                'euro_transfer_6': 0,
+                'euro_transfer_7': 0,
+                # 'euro_transfer_8': 0,
+            }
+            msg = bot.send_message(user_id, __.selling_euro_transfer, reply_markup=transfer_markup(__, category_key, transfer_methods))
+            # return bot.register_next_step_handler(call.message, get_transfer, msg)
+
+        elif step_name == 'transfer':
+            *_, payment_name, payment_state = call_str.split()
+
+            if payment_name == 'NEXT':
+                bot.edit_message_text(text=__.rent_description, chat_id=user_id, message_id=call.message.id, reply_markup=description_markup(__, category_key))
+                return bot.register_next_step_handler(call.message, get_description, call.message)
+
+            elif payment_name == 'OTHER':
+                def handle_other_transfer(message, ):
+                    user_data[user_id]['payment_methods_other'] = message.text
+
+                    transfer_methods = {
+                        'euro_transfer_1': 0,
+                        'euro_transfer_2': 0,
+                        'euro_transfer_3': 0,
+                        'euro_transfer_4': 0,
+                        'euro_transfer_5': 0,
+                        'euro_transfer_6': 0,
+                        'euro_transfer_7': 0,
+                        # 'euro_transfer_8': 0,
+                    }
+                    for _ in user_data[user_id]['payment_methods']:
+                        try:
+                            getattr(__, _)
+                            transfer_methods[_] = 1
+                        except AttributeError:
+                            continue
+
+                    bot.edit_message_reply_markup(
+                        chat_id=user_id,
+                        message_id=call.message.id,
+                        reply_markup=transfer_markup(__, category_key, transfer_methods, other_done=True)
+                    )
+                    bot.send_message(user_id, f'{__.other_transfer_label_set} {message.text}')
+                    return bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+
+                if user_data[user_id].get('payment_methods_other'):
+                    return bot_answer_or_send(bot, call, 'ALREADY SELECTED!', show_alert=True, cache_time=2)
+
+                bot.send_message(user_id, __.other_transfer_label)
+                return bot.register_next_step_handler(call.message, handle_other_transfer)
+
+            else:
+                if payment_state == '1':
+                    user_data[user_id]['payment_methods'].remove(payment_name)
+
+                elif payment_state == '0':
+                    user_data[user_id]['payment_methods'].append(payment_name)
+
+                transfer_methods = {
+                    'euro_transfer_1': 0,
+                    'euro_transfer_2': 0,
+                    'euro_transfer_3': 0,
+                    'euro_transfer_4': 0,
+                    'euro_transfer_5': 0,
+                    'euro_transfer_6': 0,
+                    'euro_transfer_7': 0,
+                    # 'euro_transfer_8': 0,
+                }
+                for _ in user_data[user_id]['payment_methods']:
+                    try:
+                        getattr(__, _)
+                        transfer_methods[_] = 1
+                    except AttributeError:
+                        continue
+
+                bot.edit_message_reply_markup(
+                    chat_id=user_id,
+                    message_id=call.message.id,
+                    reply_markup=transfer_markup(__, category_key, transfer_methods)
+                )
+                return bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+
+        elif step_name == 'description':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['description'] = ''
+            bot.edit_message_text(text=f'{__.description_label}{__.skip_btn}', chat_id=user_id,
+                                  message_id=call.message.id, reply_markup=None)
+
+            return ad_preview(call.message)
+            # bot.send_message(user_id, __.rent_photos, reply_markup=photos_markup(__, category_key))
+            # return bot.register_next_step_handler(call.message, get_photos)
+
+        elif step_name == 'ad_preview':
+            if value == 'confirm':
+                bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+                return ad_confirm(call.message)
+            elif value == 'cancel':
+                bot.clear_step_handler(call.message)
+                bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id,
+                                      reply_markup=None)
+                return bot.send_message(user_id, __.canceled_t, reply_markup=user_main_menu_markup(__))
+
+    # SERVICES
+    # NEEDS
     elif call_str.startswith('OPEN_ADS'):
 
         _, ads_state, user_id = call_str.split()
@@ -2412,6 +2895,35 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                     '[price]': __.rent_agreemental if ad_data['price'] == __.rent_agreemental else format_number(ad_data['price']),
                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                     ad_data['description'] else '',
+                }
+            },
+
+            'buying_euro': {
+                'template': __.buying_euro_user_view_ad,
+                'template_replacer': {
+                    '[euros]': ad_data['euros'],
+                    '[toman_per_euro]': __.rent_agreemental if ad_data[
+                                                                   'toman_per_euro'] == __.rent_agreemental else format_number(
+                        ad_data['toman_per_euro']),
+                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
+                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else "",
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
+                        'description'] else '',
+                }
+            },
+            'selling_euro': {
+                'template': __.selling_euro_user_view_ad,
+                'template_replacer': {
+                    '[euros]': ad_data['euros'],
+                    '[toman_per_euro]': __.rent_agreemental if ad_data[
+                                                                   'toman_per_euro'] == __.rent_agreemental else format_number(
+                        ad_data['toman_per_euro']),
+                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
+                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else "",
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
+                        'description'] else '',
                 }
             },
 
@@ -2710,6 +3222,35 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                     ad_data['description'] else '',
                 }
             },
+
+            'buying_euro': {
+                'template': __.buying_euro_user_view_ad,
+                'template_replacer': {
+                    '[euros]': ad_data['euros'],
+                    '[toman_per_euro]': __.rent_agreemental if ad_data[
+                                                                   'toman_per_euro'] == __.rent_agreemental else format_number(
+                        ad_data['toman_per_euro']),
+                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
+                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else "",
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
+                        'description'] else '',
+                }
+            },
+            'selling_euro': {
+                'template': __.selling_euro_user_view_ad,
+                'template_replacer': {
+                    '[euros]': ad_data['euros'],
+                    '[toman_per_euro]': __.rent_agreemental if ad_data[
+                                                                   'toman_per_euro'] == __.rent_agreemental else format_number(
+                        ad_data['toman_per_euro']),
+                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
+                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else "",
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
+                        'description'] else '',
+                }
+            },
         }
 
         message_template_dict = categories_templates_view_ad.get(next_ad.category)
@@ -2781,7 +3322,6 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 }
 
             },
-
             'room_rent': {
 
                 'template': __.room_rent_user_view_ad,
@@ -2827,7 +3367,6 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 }
 
             },
-
             'home_applicant': {
 
                 'template': __.home_applicant_user_view_ad,
@@ -2875,7 +3414,6 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 }
 
             },
-
             'meldezettel': {
 
                 'template': __.meldezettel_user_view_ad,
@@ -2929,7 +3467,6 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 }
 
             },
-
             'buying_goods': {
 
                 'template': __.buying_goods_user_view_ad,
@@ -2984,6 +3521,35 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         ad_data['price']),
                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                     ad_data['description'] else '',
+                }
+            },
+
+            'buying_euro': {
+                'template': __.buying_euro_user_view_ad,
+                'template_replacer': {
+                    '[euros]': ad_data['euros'],
+                    '[toman_per_euro]': __.rent_agreemental if ad_data[
+                                                                   'toman_per_euro'] == __.rent_agreemental else format_number(
+                        ad_data['toman_per_euro']),
+                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
+                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else "",
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
+                        'description'] else '',
+                }
+            },
+            'selling_euro': {
+                'template': __.selling_euro_user_view_ad,
+                'template_replacer': {
+                    '[euros]': ad_data['euros'],
+                    '[toman_per_euro]': __.rent_agreemental if ad_data[
+                                                                   'toman_per_euro'] == __.rent_agreemental else format_number(
+                        ad_data['toman_per_euro']),
+                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
+                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else "",
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
+                        'description'] else '',
                 }
             },
 

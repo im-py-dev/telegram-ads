@@ -329,3 +329,46 @@ def ad_preview_markup(__: STR, category_key):
     for _ in user_keyboard:
         user_btn.row(*_)
     return user_btn
+
+
+def tomans_markup(__: STR, category_key):
+    user_keyboard = [
+        [InlineKeyboardButton(__.rent_agreemental, callback_data=f'{category_key} tomans agreemental')],
+    ]
+    user_btn = InlineKeyboardMarkup()
+    user_btn.row_width = 2
+
+    for _ in user_keyboard:
+        user_btn.row(*_)
+    return user_btn
+
+
+def transfer_markup(__: STR, category_key, transfer_methods: dict):
+    user_keyboard = []
+    for payment_name, payment_state in transfer_methods.items():
+        user_keyboard.append(
+            InlineKeyboardButton(payment_name, callback_data=f'{category_key} transfer {payment_name} {payment_state}')
+        )
+
+    user_keyboard += InlineKeyboardButton(__.euro_transfer_next_step, callback_data=f'{category_key} transfer NEXT NEXT')
+
+    user_btn = InlineKeyboardMarkup()
+    user_btn.row_width = 2
+    user_btn.add(user_keyboard)
+    return user_btn
+
+
+def transfer_markup(__: str, category_key, transfer_methods: dict, other_done=False):
+    user_keyboard = []
+    for payment_name, payment_state in transfer_methods.items():
+        user_keyboard.append(
+            InlineKeyboardButton(f'{getattr(__, payment_name)} ✅' if payment_state else getattr(__, payment_name), callback_data=f'{category_key} transfer {payment_name} {payment_state}')
+        )
+
+    user_keyboard.append(InlineKeyboardButton(f'{__.euro_transfer_8} ✅' if other_done else __.euro_transfer_8, callback_data=f'{category_key} transfer OTHER OTHER'))
+    user_keyboard.append(InlineKeyboardButton(__.euro_transfer_next_step, callback_data=f'{category_key} transfer NEXT NEXT'))
+
+    user_btn = InlineKeyboardMarkup()
+    user_btn.row_width = 2
+    user_btn.add(*user_keyboard)  # Use the * operator to unpack the list
+    return user_btn
