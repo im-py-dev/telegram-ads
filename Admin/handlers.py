@@ -384,7 +384,7 @@ def admin_message(message, bot: TeleBot):
                         'template_replacer': {
                         '[euros]': ad_data['euros'],
                         '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
-                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
                         '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                     }
@@ -394,10 +394,31 @@ def admin_message(message, bot: TeleBot):
                         'template_replacer': {
                         '[euros]': ad_data['euros'],
                         '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
-                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
                         '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                     }
+                    },
+
+                    'services': {
+                        'template': __.services_admin_preview,
+                        'template_replacer': {
+                            '[service_name]': ad_data['product_name'],
+                            '[city]': ad_data['city'],
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                            ad_data['description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
+                    },
+                    'needs': {
+                        'template': __.needs_admin_preview,
+                        'template_replacer': {
+                            '[city]': ad_data['city'],
+                            '[price_line]': price_line2,
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                            ad_data['description'] else '',
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        }
                     },
                 }
 
@@ -579,6 +600,7 @@ def admin_callback_query(call, bot: TeleBot):
                             user_ad.ad_status = 'completed'
                             session.commit()
                     except Exception as r:
+                        return bot.send_message(admin_id, "Look like user deleted his pending ad before you review it", reply_markup=admin_main_menu_markup(__))
                         print(r)
                     else:
                         price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} {__.euros_per} #{ad_data['pricing_type']}"
@@ -738,7 +760,7 @@ def admin_callback_query(call, bot: TeleBot):
                                 'template_replacer': {
                                     '[euros]': ad_data['euros'],
                                     '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
-                                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
@@ -748,8 +770,29 @@ def admin_callback_query(call, bot: TeleBot):
                                 'template_replacer': {
                                     '[euros]': ad_data['euros'],
                                     '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
-                                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+
+                            'services': {
+                                'template': __.services_channel_message,
+                                'template_replacer': {
+                                    '[service_name]': ad_data['product_name'],
+                                    '[city]': ad_data['city'],
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                                    ad_data['description'] else '',
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                }
+                            },
+                            'needs': {
+                                'template': __.needs_channel_message,
+                                'template_replacer': {
+                                    '[city]': ad_data['city'],
+                                    '[price_line]': price_line2,
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                                    ad_data['description'] else '',
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
                             },

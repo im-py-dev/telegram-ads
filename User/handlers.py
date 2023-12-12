@@ -46,9 +46,11 @@ def bot_answer_or_send(bot: TeleBot, call, text, show_alert=False, url=None, cac
     try:
         bot.answer_callback_query(call.id, text=text, show_alert=show_alert, url=url, cache_time=cache_time)
     except ApiTelegramException as _:
-        bot.send_message(call.from_user.id, text)
+        if text:
+            bot.send_message(call.from_user.id, text)
     except Exception as _:
-        bot.send_message(call.from_user.id, text)
+        if text:
+            bot.send_message(call.from_user.id, text)
 
 
 def get_user(user_id) -> TelegramUser:
@@ -368,11 +370,12 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             ad_preview(message)
 
         elif message.photo:
+            user_data[user_id]['photos'].append(message.photo[0].file_id)
+
             if len(user_data[user_id]['photos']) >= 10:
                 # todo handle 10 max
                 return ad_preview(message)
 
-            user_data[user_id]['photos'].append(message.photo[0].file_id)
             bot.send_message(message.from_user.id, __.rent_photos_done, reply_markup=photo_markup(__, category_key))
             bot.register_next_step_handler(message, get_photo)
 
@@ -534,7 +537,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         user_data[user_id]['toman_per_euro']),
                     '[payment_methods]': ' '.join(map(
                         lambda i: f'#{getattr(__, i)}',
-                        user_data[user_id]['payment_methods'])) + f" {user_data[user_id].get('payment_methods_other')}" if user_data[user_id].get('payment_methods_other') else "",
+                        user_data[user_id]['payment_methods'])) + (f" {user_data[user_id].get('payment_methods_other')}" if user_data[user_id].get('payment_methods_other') else ""),
                     '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
                     user_data[user_id]['description'] else '',
                 }
@@ -547,7 +550,26 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         user_data[user_id]['toman_per_euro']),
                     '[payment_methods]': ' '.join(map(
                         lambda i: f'#{getattr(__, i)}',
-                        user_data[user_id]['payment_methods'])) + f" {user_data[user_id].get('payment_methods_other')}" if user_data[user_id].get('payment_methods_other') else "",
+                        user_data[user_id]['payment_methods'])) + (f" {user_data[user_id].get('payment_methods_other')}" if user_data[user_id].get('payment_methods_other') else ""),
+                    '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
+                    user_data[user_id]['description'] else '',
+                }
+            },
+
+            'services': {
+                'template': __.services_user_preview,
+                'template_replacer': {
+                    '[service_name]': user_data[user_id]['product_name'],
+                    '[city]': user_data[user_id]['city'],
+                    '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
+                    user_data[user_id]['description'] else '',
+                }
+            },
+            'needs': {
+                'template': __.needs_user_preview,
+                'template_replacer': {
+                    '[city]': user_data[user_id]['city'],
+                    '[price_line]': price_line2,
                     '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
                     user_data[user_id]['description'] else '',
                 }
@@ -749,7 +771,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                     'template_replacer': {
                         '[euros]': ad_data['euros'],
                         '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
-                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
                         '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                     }
@@ -759,8 +781,29 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                     'template_replacer': {
                         '[euros]': ad_data['euros'],
                         '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
-                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else "",
+                        '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                    }
+                },
+
+                'services': {
+                    'template': __.services_admin_preview,
+                    'template_replacer': {
+                        '[service_name]': ad_data['product_name'],
+                        '[city]': ad_data['city'],
+                        '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                        ad_data['description'] else '',
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                    }
+                },
+                'needs': {
+                    'template': __.needs_admin_preview,
+                    'template_replacer': {
+                        '[city]': ad_data['city'],
+                        '[price_line]': price_line2,
+                        '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                        ad_data['description'] else '',
                         '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                     }
                 },
@@ -2648,8 +2691,248 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                       reply_markup=None)
                 return bot.send_message(user_id, __.canceled_t, reply_markup=user_main_menu_markup(__))
 
-    # SERVICES
-    # NEEDS
+    elif call_str.startswith('SERVICES'):
+        category_key, step_name, value = call_str.split()
+        print(call_str)
+        print(category_key, step_name, value)
+
+        @cancel_option
+        def get_service_name(message, msg):
+            user_data[user_id]['product_name'] = message.text
+
+            bot.edit_message_text(text=f'{__.services_service_name_label}{message.text}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+
+            city_markup = select_city_markup(__, category_key)
+            msg = bot.send_message(user_id, __.rent_t2, reply_markup=city_markup)
+            bot.register_next_step_handler(msg, get_city_name, msg)
+
+        @cancel_option
+        def get_city_name(message, message_to_edit):
+            user_data[user_id]['city'] = message.text
+            bot.edit_message_text(text=f'{__.city_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
+
+            msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
+            return bot.register_next_step_handler(call.message, get_description, msg)
+
+        @cancel_option
+        def get_city_from_other(message, message_to_edit):
+            user_data[user_id]['city'] = message.text
+            bot.edit_message_text(text=f'{__.city_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
+
+            msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
+            return bot.register_next_step_handler(call.message, get_description, msg)
+
+        if step_name == 'start':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.delete_message(chat_id=user_id, message_id=call.message.id)
+
+            user_data[user_id] = {
+                'id': f'{user_id}_{call.message.id}',
+                'uid': user_id,
+                'category': 'services',
+                'user_full_name': call.from_user.full_name,
+                'product_name': '',
+                'from_to_city': '',
+                'city': '',
+                'city2': '',
+                'load': '',
+                'sub_city': '',
+                'start_date': '',
+                'end_date': '',
+                'contract_status': '',
+                'pricing_type': '',
+                'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
+                'description': '',
+                'photos': [],
+            }
+
+            bot.send_message(user_id, __.services_t1, reply_markup=cancel_markup(__))
+            time.sleep(0.2)
+            msg = bot.send_message(user_id, __.services_t2)
+            return bot.register_next_step_handler(call.message, get_service_name, msg)
+
+        if step_name == 'city':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            if value == 'other':
+                bot.edit_message_text(text=__.rent_other_city, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+                bot.register_next_step_handler(call.message, get_city_from_other, call.message)
+            else:
+                city = getattr(__, value)
+                user_data[user_id]['city'] = city
+                bot.edit_message_text(text=f'{__.city_label}{city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
+
+                msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
+                return bot.register_next_step_handler(call.message, get_description, msg)
+
+        if step_name == 'description':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['description'] = ''
+            user_data[user_id]['photos'] = []
+            bot.edit_message_text(text=f'{__.description_label}{__.skip_btn}', chat_id=user_id,
+                                  message_id=call.message.id, reply_markup=None)
+
+            bot.send_message(user_id, __.rent_photos, reply_markup=photos_markup(__, category_key))
+            return bot.register_next_step_handler(call.message, get_photos)
+
+        if step_name == 'photos':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+            user_data[user_id]['photos'] = []
+
+            return ad_preview(call.message)
+
+        if step_name == 'photo':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+            return ad_preview(call.message)
+
+        if step_name == 'ad_preview':
+            if value == 'confirm':
+                bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+                return ad_confirm(call.message)
+            elif value == 'cancel':
+                bot.clear_step_handler(call.message)
+
+                if call.message.text:
+                    bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id,
+                                          reply_markup=None)
+                elif call.message.caption:
+                    bot.edit_message_caption(caption=__.rent_order_canceled, chat_id=user_id,
+                                             message_id=call.message.id, reply_markup=None)
+
+                # bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+                return bot.send_message(user_id, __.canceled_t, reply_markup=user_main_menu_markup(__))
+
+    elif call_str.startswith('NEEDS'):
+        category_key, step_name, value = call_str.split()
+        print(call_str)
+        print(category_key, step_name, value)
+
+        @cancel_option
+        def get_city_name(message, message_to_edit):
+            user_data[user_id]['city'] = message.text
+            bot.edit_message_text(text=f'{__.city_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
+
+            bot.send_message(user_id, __.rent_price, reply_markup=pricing_markup(__, category_key))
+            return bot.register_next_step_handler(call.message, get_price, msg)
+
+        @cancel_option
+        def get_city_from_other(message, message_to_edit):
+            user_data[user_id]['city'] = message.text
+            bot.edit_message_text(text=f'{__.city_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
+
+            bot.send_message(user_id, __.rent_price, reply_markup=pricing_markup(__, category_key))
+            return bot.register_next_step_handler(call.message, get_price, msg)
+
+        if step_name == 'start':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            city_markup = select_city_markup(__, category_key)
+            bot.delete_message(chat_id=user_id, message_id=call.message.id)
+            # bot.edit_message_text(text=__.rent_t1, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+            # bot.edit_message_reply_markup(chat_id=user_id, message_id=call.message.id, reply_markup=cancel_markup(__))
+            bot.send_message(user_id, __.rent_t1, reply_markup=cancel_markup(__))
+            time.sleep(0.2)
+            msg = bot.send_message(user_id, __.rent_t2, reply_markup=city_markup)
+            # bot.add_data(user_id)
+            user_data[user_id] = {
+                'id': f'{user_id}_{call.message.id}',
+                'uid': user_id,
+                'category': 'needs',
+                'user_full_name': call.from_user.full_name,
+                'product_name': '',
+                'from_to_city': '',
+                'city': '',
+                'city2': '',
+                'load': '',
+                'sub_city': '',
+                'start_date': '',
+                'end_date': '',
+                'contract_status': '',
+                'pricing_type': '',
+                'price': '',
+                'euros': '',
+                'toman_per_euro': '',
+                'payment_methods': [],
+                'description': '',
+                'photos': [],
+            }
+            bot.register_next_step_handler(msg, get_city_name, msg)
+
+        if step_name == 'city':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            if value == 'other':
+                bot.edit_message_text(text=__.rent_other_city, chat_id=user_id, message_id=call.message.id,
+                                      reply_markup=None)
+                bot.register_next_step_handler(call.message, get_city_from_other, call.message)
+            else:
+                city = getattr(__, value)
+                user_data[user_id]['city'] = city
+                bot.edit_message_text(text=f'{__.city_label}{city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
+
+                bot.send_message(user_id, __.rent_price, reply_markup=pricing_markup(__, category_key))
+                return bot.register_next_step_handler(call.message, get_price, msg)
+
+        if step_name == 'pricing':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['price'] = __.rent_agreemental
+            bot.edit_message_text(text=f'{__.price_label}{__.rent_agreemental}', chat_id=user_id,
+                                  message_id=call.message.id, reply_markup=None)
+
+            msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
+            return bot.register_next_step_handler(call.message, get_description, msg)
+
+        if step_name == 'description':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['description'] = ''
+            user_data[user_id]['photos'] = []
+            bot.edit_message_text(text=f'{__.description_label}{__.skip_btn}', chat_id=user_id,
+                                  message_id=call.message.id, reply_markup=None)
+
+            bot.send_message(user_id, __.rent_photos, reply_markup=photos_markup(__, category_key))
+            return bot.register_next_step_handler(call.message, get_photos)
+
+        if step_name == 'photos':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+            user_data[user_id]['photos'] = []
+
+            return ad_preview(call.message)
+
+        if step_name == 'photo':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+            return ad_preview(call.message)
+
+        if step_name == 'ad_preview':
+            if value == 'confirm':
+                bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+                return ad_confirm(call.message)
+            elif value == 'cancel':
+                bot.clear_step_handler(call.message)
+
+                if call.message.text:
+                    bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id,
+                                          reply_markup=None)
+                elif call.message.caption:
+                    bot.edit_message_caption(caption=__.rent_order_canceled, chat_id=user_id,
+                                             message_id=call.message.id, reply_markup=None)
+
+                # bot.edit_message_text(text=__.rent_order_canceled, chat_id=user_id, message_id=call.message.id, reply_markup=None)
+                return bot.send_message(user_id, __.canceled_t, reply_markup=user_main_menu_markup(__))
+
     elif call_str.startswith('OPEN_ADS'):
 
         _, ads_state, user_id = call_str.split()
@@ -2906,8 +3189,8 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                                                    'toman_per_euro'] == __.rent_agreemental else format_number(
                         ad_data['toman_per_euro']),
                     '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
-                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
-                        'payment_methods_other') else "",
+                        'payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else ""),
                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                         'description'] else '',
                 }
@@ -2920,10 +3203,29 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                                                    'toman_per_euro'] == __.rent_agreemental else format_number(
                         ad_data['toman_per_euro']),
                     '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
-                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
-                        'payment_methods_other') else "",
+                        'payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else ""),
                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                         'description'] else '',
+                }
+            },
+
+            'services': {
+                'template': __.services_user_view_ad,
+                'template_replacer': {
+                    '[service_name]': ad_data['product_name'],
+                    '[city]': ad_data['city'],
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
+                }
+            },
+            'needs': {
+                'template': __.needs_user_view_ad,
+                'template_replacer': {
+                    '[city]': ad_data['city'],
+                    '[price_line]': price_line2,
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
                 }
             },
 
@@ -3231,8 +3533,8 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                                                    'toman_per_euro'] == __.rent_agreemental else format_number(
                         ad_data['toman_per_euro']),
                     '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
-                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
-                        'payment_methods_other') else "",
+                        'payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else ""),
                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                         'description'] else '',
                 }
@@ -3245,10 +3547,29 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                                                    'toman_per_euro'] == __.rent_agreemental else format_number(
                         ad_data['toman_per_euro']),
                     '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
-                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
-                        'payment_methods_other') else "",
+                        'payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else ""),
                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                         'description'] else '',
+                }
+            },
+
+            'services': {
+                'template': __.services_user_view_ad,
+                'template_replacer': {
+                    '[service_name]': ad_data['product_name'],
+                    '[city]': ad_data['city'],
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
+                }
+            },
+            'needs': {
+                'template': __.needs_user_view_ad,
+                'template_replacer': {
+                    '[city]': ad_data['city'],
+                    '[price_line]': price_line2,
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
                 }
             },
         }
@@ -3532,8 +3853,8 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                                                    'toman_per_euro'] == __.rent_agreemental else format_number(
                         ad_data['toman_per_euro']),
                     '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
-                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
-                        'payment_methods_other') else "",
+                        'payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else ""),
                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                         'description'] else '',
                 }
@@ -3546,10 +3867,29 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                                                    'toman_per_euro'] == __.rent_agreemental else format_number(
                         ad_data['toman_per_euro']),
                     '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data[
-                        'payment_methods'])) + f" {ad_data.get('payment_methods_other')}" if ad_data.get(
-                        'payment_methods_other') else "",
+                        'payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                        'payment_methods_other') else ""),
                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                         'description'] else '',
+                }
+            },
+
+            'services': {
+                'template': __.services_user_view_ad,
+                'template_replacer': {
+                    '[service_name]': ad_data['product_name'],
+                    '[city]': ad_data['city'],
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
+                }
+            },
+            'needs': {
+                'template': __.needs_user_view_ad,
+                'template_replacer': {
+                    '[city]': ad_data['city'],
+                    '[price_line]': price_line2,
+                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
+                    ad_data['description'] else '',
                 }
             },
 

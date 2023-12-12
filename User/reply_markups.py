@@ -111,7 +111,10 @@ def my_ads_markup(__: STR, user_id, user_ad: Ad, len_user_ads):
 
 
 def confirm_delete_ad_markup(__: STR):
-    user_btn = ReplyKeyboardMarkup(resize_keyboard=True, input_field_placeholder=__.rent_hint_text_confirm_or_cancel)
+    user_btn = ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        # input_field_placeholder=__.rent_hint_text_confirm_or_cancel
+                                   )
     for _ in [
         [__.cancel_t, __.confirm_t],
     ]:
