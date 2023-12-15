@@ -583,6 +583,10 @@ def admin_callback_query(call, bot: TeleBot):
         with session:
             user_ad: Ad = session.query(Ad).filter_by(user_id=user_id, id=new_ad_id).first()
             print(user_ad)
+
+            if user_ad.ad_status != "pending":
+                bot.delete_message(admin_id, call.message.id)
+                return bot.send_message(admin_id, "Ad is not pending any more!.")
         ad_data: dict = json.loads(user_ad.data)
         # found_ad = next((item for item in load_json('pending_ads.json') if item["id"] == ad_id), None)
 
@@ -597,12 +601,6 @@ def admin_callback_query(call, bot: TeleBot):
                             user_ad: Ad = session.query(Ad).filter_by(user_id=user_id, id=new_ad_id).first()
                             ad_id = user_ad.id
                             ad_category = user_ad.category
-                            user_ad.ad_status = 'completed'
-                            session.commit()
-                    except Exception as r:
-                        return bot.send_message(admin_id, "Look like user deleted his pending ad before you review it", reply_markup=admin_main_menu_markup(__))
-                        print(r)
-                    else:
                         price_line = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])} {__.euros_per} #{ad_data['pricing_type']}"
                         price_line2 = f"{__.price_eye}{__.rent_agreemental}" if ad_data['price'] == __.rent_agreemental else f"{__.price_eye} {format_number(ad_data['price'])}"
 
@@ -616,7 +614,8 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[end_date]': ad_data['end_date'],
                                     '[contract_status]': ad_data['contract_status'],
                                     '[price_line]': price_line,
-                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
+                                        'description'] else '',
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
                             },
@@ -759,9 +758,15 @@ def admin_callback_query(call, bot: TeleBot):
                                 'template': __.buying_euro_channel_message,
                                 'template_replacer': {
                                     '[euros]': ad_data['euros'],
-                                    '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
-                                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
-                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
+                                    '[toman_per_euro]': __.rent_agreemental if ad_data[
+                                                                                   'toman_per_euro'] == __.rent_agreemental else format_number(
+                                        ad_data['toman_per_euro']),
+                                    '[payment_methods]': ' '.join(
+                                        map(lambda i: f'#{getattr(__, i)}', ad_data['payment_methods'])) + (
+                                                             f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                                                                 'payment_methods_other') else ""),
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
+                                        'description'] else '',
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
                             },
@@ -769,9 +774,15 @@ def admin_callback_query(call, bot: TeleBot):
                                 'template': __.selling_euro_channel_message,
                                 'template_replacer': {
                                     '[euros]': ad_data['euros'],
-                                    '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
-                                    '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
-                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
+                                    '[toman_per_euro]': __.rent_agreemental if ad_data[
+                                                                                   'toman_per_euro'] == __.rent_agreemental else format_number(
+                                        ad_data['toman_per_euro']),
+                                    '[payment_methods]': ' '.join(
+                                        map(lambda i: f'#{getattr(__, i)}', ad_data['payment_methods'])) + (
+                                                             f" {ad_data.get('payment_methods_other')}" if ad_data.get(
+                                                                 'payment_methods_other') else ""),
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
+                                        'description'] else '',
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
                             },
@@ -818,6 +829,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     text=rent_channel_message,
                                     # reply_markup=
                                 )
+
                             with session:
                                 user_ad: Ad = session.query(Ad).filter_by(user_id=user_id, id=new_ad_id).first()
                                 user_ad.channel_message_id = channel_msg.id
@@ -829,7 +841,15 @@ def admin_callback_query(call, bot: TeleBot):
                         bot_answer_or_send(bot, call, __.rent_confirmed_ad_admin, show_alert=True, cache_time=5 * 1)
                         bot.delete_message(admin_id, call.message.id)
                         bot.send_message(user_id, __.rent_confirmed_ad)
-                        return bot.send_message(admin_id, __.confirmed_t, reply_markup=admin_main_menu_markup(__))
+                        bot.send_message(admin_id, __.confirmed_t, reply_markup=admin_main_menu_markup(__))
+                    except Exception as r:
+                        return bot.send_message(admin_id, "Look like user deleted his pending ad before you review it", reply_markup=admin_main_menu_markup(__))
+                        print(r)
+                    else:
+                        with session:
+                            user_ad: Ad = session.query(Ad).filter_by(user_id=user_id, id=new_ad_id).first()
+                            user_ad.ad_status = 'completed'
+                            session.commit()
 
             bot.send_message(admin_id, __.confirm_action_ask, reply_markup=admin_confirm_action_markup(__))
             bot.register_next_step_handler(call.message, confirm_accept)

@@ -3931,7 +3931,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                     bot_answer_or_send(bot, call, '', show_alert=False, cache_time=1)
                     return bot.send_message(user_id, __.pending_ad_deleted, reply_markup=user_main_menu_markup(__))
                 else:
-                    bot.send_message(user_id, __.ad_delete_error)
+                    bot.send_message(user_id, __.ad_delete_error, reply_markup=user_main_menu_markup(__))
 
         # AD_DELETE {user_id} {user_ad.id}
         _, user_id, ad_id = call_str.split()
@@ -3968,7 +3968,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                     bot_answer_or_send(bot, call, '', show_alert=False, cache_time=1)
                     return bot.send_message(user_id, __.ad_expired, reply_markup=user_main_menu_markup(__))
                 else:
-                    bot.send_message(user_id, __.ad_expired_error)
+                    bot.send_message(user_id, __.ad_expired_error, reply_markup=user_main_menu_markup(__))
 
         # AD_DELETE {user_id} {user_ad.id}
         _, user_id, ad_id = call_str.split()

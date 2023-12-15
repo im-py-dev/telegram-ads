@@ -95,14 +95,14 @@ def my_ads_markup(__: STR, user_id, user_ad: Ad, len_user_ads):
     user_keyboard = []
 
     if len_user_ads > 1:
-        user_keyboard.append(InlineKeyboardButton('<<', callback_data=f'AD_BACK {user_id} {user_ad.ad_status.name} {user_ad.id}'))
-        user_keyboard.append(InlineKeyboardButton('>>', callback_data=f'AD_FORWARD {user_id} {user_ad.ad_status.name} {user_ad.id}'))
+        user_keyboard.append(InlineKeyboardButton(__.my_ads_previous, callback_data=f'AD_BACK {user_id} {user_ad.ad_status.name} {user_ad.id}'))
+        user_keyboard.append(InlineKeyboardButton(__.my_ads_next, callback_data=f'AD_FORWARD {user_id} {user_ad.ad_status.name} {user_ad.id}'))
 
     if user_ad.ad_status.name == 'pending':
-        user_keyboard.append(InlineKeyboardButton('DELETE', callback_data=f'AD_DELETE {user_id} {user_ad.id}'))
+        user_keyboard.append(InlineKeyboardButton(__.my_ads_delete, callback_data=f'AD_DELETE {user_id} {user_ad.id}'))
 
     if user_ad.ad_status.name == 'completed':
-        user_keyboard.append(InlineKeyboardButton('EXPIRE', callback_data=f'AD_EXPIRE {user_id} {user_ad.id}'))
+        user_keyboard.append(InlineKeyboardButton(__.my_ads_expire, callback_data=f'AD_EXPIRE {user_id} {user_ad.id}'))
 
     user_btn = InlineKeyboardMarkup()
     user_btn.row_width = 2
