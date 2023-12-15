@@ -35,12 +35,12 @@ def ads_catygories_markup(__: STR, user_id):
     user_keyboard = [
         [
             InlineKeyboardButton(__.rent_btn, callback_data=f'RENT start value'),
-            InlineKeyboardButton(__.room_rent_btn, callback_data=f'ROOM_RENT start value'),
+            InlineKeyboardButton(__.home_applicant_btn, callback_data=f'HOME_APPLICANT start value'),
         ],
 
         [
+            InlineKeyboardButton(__.room_rent_btn, callback_data=f'ROOM_RENT start value'),
             InlineKeyboardButton(__.room_applicant_btn, callback_data=f'ROOM_APPLICANT start value'),
-            InlineKeyboardButton(__.home_applicant_btn, callback_data=f'HOME_APPLICANT start value'),
          ],
 
         [
@@ -49,17 +49,17 @@ def ads_catygories_markup(__: STR, user_id):
          ],
 
         [
-            InlineKeyboardButton(__.buying_goods_btn, callback_data=f'BUYING_GOODS start value'),
             InlineKeyboardButton(__.selling_goods_btn, callback_data=f'SELLING_GOODS start value'),
+            InlineKeyboardButton(__.buying_goods_btn, callback_data=f'BUYING_GOODS start value'),
          ],
 
         [
-            InlineKeyboardButton(__.buying_cargo_btn, callback_data=f'BUYING_CARGO start value'),
             InlineKeyboardButton(__.selling_cargo_btn, callback_data=f'SELLING_CARGO start value'),
+            InlineKeyboardButton(__.buying_cargo_btn, callback_data=f'BUYING_CARGO start value'),
         ],
         [
-            InlineKeyboardButton(__.buying_euro_btn, callback_data=f'BUYING_EURO start value'),
             InlineKeyboardButton(__.selling_euro_btn, callback_data=f'SELLING_EURO start value'),
+            InlineKeyboardButton(__.buying_euro_btn, callback_data=f'BUYING_EURO start value'),
         ],
         [
             InlineKeyboardButton(__.services_btn, callback_data=f'SERVICES start value'),

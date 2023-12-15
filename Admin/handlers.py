@@ -241,7 +241,7 @@ def admin_message(message, bot: TeleBot):
                             '[end_date]': ad_data['end_date'],
                             '[contract_status]': ad_data['contract_status'],
                             '[price_line]': price_line,
-                            '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                 'description'] else '',
                             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                         }
@@ -255,7 +255,7 @@ def admin_message(message, bot: TeleBot):
                             '[end_date]': ad_data['end_date'],
                             '[contract_status]': ad_data['contract_status'],
                             '[price_line]': price_line,
-                            '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                 'description'] else '',
                             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                         }
@@ -269,7 +269,7 @@ def admin_message(message, bot: TeleBot):
                             '[start_date]': ad_data['start_date'],
                             '[end_date]': ad_data['end_date'],
                             '[contract_status]': ad_data['contract_status'],
-                            '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                 'description'] else '',
                             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                         }
@@ -282,7 +282,7 @@ def admin_message(message, bot: TeleBot):
                             '[start_date]': ad_data['start_date'],
                             '[end_date]': ad_data['end_date'],
                             '[contract_status]': ad_data['contract_status'],
-                            '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                            '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                 'description'] else '',
                             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                         }
@@ -433,7 +433,7 @@ def admin_message(message, bot: TeleBot):
                 #             '[end_date]': ad_data['end_date'],
                 #             '[contract_status]': ad_data['contract_status'],
                 #             '[price_line]': price_line,
-                #             '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                #             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                 #                 'description'] else '',
                 #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                 #         }
@@ -447,7 +447,7 @@ def admin_message(message, bot: TeleBot):
                 #             '[end_date]': ad_data['end_date'],
                 #             '[contract_status]': ad_data['contract_status'],
                 #             '[price_line]': price_line,
-                #             '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                #             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                 #                 'description'] else '',
                 #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                 #         }
@@ -460,7 +460,7 @@ def admin_message(message, bot: TeleBot):
                 #             '[start_date]': ad_data['start_date'],
                 #             '[end_date]': ad_data['end_date'],
                 #             '[contract_status]': ad_data['contract_status'],
-                #             '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                #             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                 #                 'description'] else '',
                 #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                 #         }
@@ -473,7 +473,7 @@ def admin_message(message, bot: TeleBot):
                 #             '[start_date]': ad_data['start_date'],
                 #             '[end_date]': ad_data['end_date'],
                 #             '[contract_status]': ad_data['contract_status'],
-                #             '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                #             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                 #                 'description'] else '',
                 #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                 #         }
@@ -494,7 +494,7 @@ def admin_message(message, bot: TeleBot):
                 #     '[contract_status]': ad_data['contract_status'],
                 #     '[pricing_type]': ad_data['pricing_type'],
                 #     '[price]': format_number(ad_data['price']),
-                #     '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data['description'] else '',
+                #     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
                 #     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                 # })
 
@@ -616,7 +616,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[end_date]': ad_data['end_date'],
                                     '[contract_status]': ad_data['contract_status'],
                                     '[price_line]': price_line,
-                                    '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data['description'] else '',
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
                             },
@@ -629,7 +629,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[end_date]': ad_data['end_date'],
                                     '[contract_status]': ad_data['contract_status'],
                                     '[price_line]': price_line,
-                                    '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                         'description'] else '',
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
@@ -643,7 +643,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[start_date]': ad_data['start_date'],
                                     '[end_date]': ad_data['end_date'],
                                     '[contract_status]': ad_data['contract_status'],
-                                    '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                         'description'] else '',
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
@@ -656,7 +656,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[start_date]': ad_data['start_date'],
                                     '[end_date]': ad_data['end_date'],
                                     '[contract_status]': ad_data['contract_status'],
-                                    '[description]': f"\nDescription:\n{ad_data['description']}\n" if ad_data[
+                                    '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                         'description'] else '',
                                     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                                 }
