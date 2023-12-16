@@ -582,9 +582,8 @@ def admin_callback_query(call, bot: TeleBot):
         print(_, command_str, user_id, new_ad_id)
         with session:
             user_ad: Ad = session.query(Ad).filter_by(user_id=user_id, id=new_ad_id).first()
-            print(user_ad)
 
-            if user_ad.ad_status != "pending":
+            if user_ad.ad_status.name != "pending":
                 bot.delete_message(admin_id, call.message.id)
                 return bot.send_message(admin_id, "Ad is not pending any more!.")
         ad_data: dict = json.loads(user_ad.data)
