@@ -79,10 +79,10 @@ def ads_catygories_markup(__: STR, user_id):
 
 def my_ads_3options_markup(__: STR, user_id):
     user_keyboard = [
-        InlineKeyboardButton('PENDING ADS', callback_data=f'OPEN_ADS pending {user_id}'),
-        InlineKeyboardButton('ACCEPTED ADS', callback_data=f'OPEN_ADS completed {user_id}'),
-        InlineKeyboardButton('EXPIRED ADS', callback_data=f'OPEN_ADS expired {user_id}'),
-        InlineKeyboardButton('DECLINED ADS', callback_data=f'OPEN_ADS canceled {user_id}'),
+        InlineKeyboardButton(__.pending_ads_text, callback_data=f'OPEN_ADS pending {user_id}'),
+        InlineKeyboardButton(__.accepted_ads_text, callback_data=f'OPEN_ADS completed {user_id}'),
+        InlineKeyboardButton(__.expired_ads_text, callback_data=f'OPEN_ADS expired {user_id}'),
+        InlineKeyboardButton(__.declined_ads_text, callback_data=f'OPEN_ADS canceled {user_id}'),
     ]
 
     user_btn = InlineKeyboardMarkup()

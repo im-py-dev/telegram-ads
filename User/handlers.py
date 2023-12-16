@@ -2940,7 +2940,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         user_ads: list[Ad] = session.query(Ad).filter_by(user=user, ad_status=ads_state).all()
 
         if not user_ads:
-            return bot_answer_or_send(bot, call, f'You Dont have Ads in this state', show_alert=False, cache_time=0)
+            return bot_answer_or_send(bot, call, __.no_ads_in_category_text, show_alert=False, cache_time=0)
 
         user_ad = user_ads[0]
 
@@ -3279,7 +3279,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         if index > len(user_ads) - 1:
             index = 0
 
-            # return bot_answer_or_send(bot, call, f'You Dont have Ads in this state', show_alert=False, cache_time=0)
+            # return bot_answer_or_send(bot, call, __.no_ads_in_category_text', show_alert=False, cache_time=0)
 
         next_ad_id = user_ads[index].id
 
@@ -3606,7 +3606,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
         index = user_ads.index(last_user_ad) - 1
 
-        # return bot_answer_or_send(bot, call, f'You Dont have Ads in this state', show_alert=False, cache_time=0)
+        # return bot_answer_or_send(bot, call, __.no_ads_in_category_text', show_alert=False, cache_time=0)
 
         next_ad_id = user_ads[index].id
 
