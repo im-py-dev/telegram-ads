@@ -2837,9 +2837,9 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             bot.delete_message(chat_id=user_id, message_id=call.message.id)
             # bot.edit_message_text(text=__.rent_t1, chat_id=user_id, message_id=call.message.id, reply_markup=None)
             # bot.edit_message_reply_markup(chat_id=user_id, message_id=call.message.id, reply_markup=cancel_markup(__))
-            bot.send_message(user_id, __.rent_t1, reply_markup=cancel_markup(__))
+            bot.send_message(user_id, __.needs_t1, reply_markup=cancel_markup(__))
             time.sleep(0.2)
-            msg = bot.send_message(user_id, __.rent_t2, reply_markup=city_markup)
+            msg = bot.send_message(user_id, __.needs_t2, reply_markup=city_markup)
             # bot.add_data(user_id)
             user_data[user_id] = {
                 'id': f'{user_id}_{call.message.id}',
