@@ -1,8 +1,10 @@
+import os.path
 from typing import Callable, Any, Tuple, Union
 import shutil
 
 from sqlalchemy.orm import make_transient
 
+from Modules.Extra.telethon_checker import send_ad_to_channel, send_ad_photo_to_channel
 from User.rent_markups import cancel_markup, cancel_confirm_markup
 from config import ADMINS_IDS, posting_channels, PROJECT_PATH
 
@@ -814,6 +816,29 @@ def admin_callback_query(call, bot: TeleBot):
                         rent_channel_message = formatted(message_template_str, message_template_replacer)
 
                         for posting_channel in posting_channels:
+                            def get_photo_path(photo_id):
+                                temp_path = os.path.join(PROJECT_PATH, 'temp')
+                                if not os.path.isdir(temp_path):
+                                    os.mkdir(temp_path)
+
+                                file_info = bot.get_file(photo_id)
+
+                                # Download the photo
+                                downloaded_file = bot.download_file(file_info.file_path)
+                                print(file_info)
+                                print(file_info.file_path)
+
+                                # Extract file extension from file path
+                                file_extension = os.path.splitext(file_info.file_path)[-1]
+                                print(file_extension)
+
+                                # Save the photo with the specified name and file extension
+                                file_path = os.path.join(temp_path, f"{photo_id}{file_extension}")
+                                with open(file_path, 'wb') as file:
+                                    file.write(downloaded_file)
+
+                                return file_path
+
                             # todo change how we save message ID if we want multi channels
                             if ad_data.get('photos'):
                                 channel_msg = bot.send_photo(
@@ -822,7 +847,24 @@ def admin_callback_query(call, bot: TeleBot):
                                     caption=rent_channel_message,
                                     reply_markup=rent_channel_markup(__, ad_id),
                                 )
+                                # channel_msg = send_ad_photo_to_channel(
+                                #     channel_username=posting_channel,
+                                #     message_html=rent_channel_message,
+                                #     photo_path=get_photo_path(photo_id=ad_data.get('photos')[0])
+                                # )
+                                # bot.edit_message_reply_markup(
+                                #     chat_id=posting_channel,
+                                #     message_id=channel_msg.id,
+                                #     reply_markup=rent_channel_markup(__, ad_id)
+                                # )
+                                # print(f'{channel_msg=}')
+
                             else:
+                                # channel_msg = send_ad_to_channel(
+                                #     channel_username=posting_channel,
+                                #     message_html=rent_channel_message,
+                                # )
+                                # print(channel_msg.__dict__)
                                 channel_msg = bot.send_message(
                                     chat_id=posting_channel,
                                     text=rent_channel_message,
@@ -833,6 +875,8 @@ def admin_callback_query(call, bot: TeleBot):
                                 user_ad: Ad = session.query(Ad).filter_by(user_id=user_id, id=new_ad_id).first()
                                 user_ad.channel_message_id = channel_msg.id
                                 user_ad.channel_message_text = channel_msg.html_text if channel_msg.text else channel_msg.html_caption
+                                # user_ad.channel_message_id = channel_msg.id
+                                # user_ad.channel_message_text = channel_msg.message
                                 session.commit()
                             # stop loop since we cant do more then 1 channel
                             break
@@ -842,8 +886,8 @@ def admin_callback_query(call, bot: TeleBot):
                         bot.send_message(user_id, __.rent_confirmed_ad)
                         bot.send_message(admin_id, __.confirmed_t, reply_markup=admin_main_menu_markup(__))
                     except Exception as r:
-                        return bot.send_message(admin_id, "Look like user deleted his pending ad before you review it", reply_markup=admin_main_menu_markup(__))
                         print(r)
+                        return bot.send_message(admin_id, "Look like user deleted his pending ad before you review it", reply_markup=admin_main_menu_markup(__))
                     else:
                         with session:
                             user_ad: Ad = session.query(Ad).filter_by(user_id=user_id, id=new_ad_id).first()

@@ -31,4 +31,5 @@ force_subscribe_channels = [line.strip() for line in os.getenv("FORCE_SUBSCRIBE_
 print("force_subscribe_channels", force_subscribe_channels)
 
 posting_channels = [line.strip() for line in os.getenv("POSTING_CHANNELS", '').split(',') if line]
+posting_channel = posting_channels[0]
 print("posting_channels", posting_channels)

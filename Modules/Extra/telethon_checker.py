@@ -3,8 +3,11 @@ import asyncio
 import functools
 import time
 from typing import List
-from telethon.tl.types import User
+
+from telethon.tl.types import User, ReplyKeyboardMarkup, KeyboardButtonRow
 from telethon.sync import TelegramClient
+from telethon import Button
+
 from config import PROJECT_PATH, force_subscribe_channels
 from dotenv import load_dotenv
 # from functools import lru_cache
@@ -18,6 +21,30 @@ session_name = os.getenv('CLIENT_NAME')
 
 loop = asyncio.new_event_loop()
 client = TelegramClient(os.path.join(PROJECT_PATH, 'sessions', f'{session_name}.session'), API_ID, API_HASH)
+client.parse_mode = 'html'
+
+# with client:
+#     from telethon.tl.types import ReplyInlineMarkup
+#
+#     # Define buttons
+#     reply_markup = ReplyInlineMarkup(rows=[
+#         KeyboardButtonRow(
+#             buttons=[
+#                 KeyboardButtonUrl(
+#                     text='click me',
+#                     url='https://bard.google.com',
+#                 )
+#             ]
+#         )
+#     ])
+#     reply_markup = Button.inline('Click me', b'click_data')
+#
+#     client.send_message(
+#     entity='@sy_aloosh',
+#     message='123',
+#     buttons=reply_markup,
+#     # buttons=KeyboardButtonRow( [] )
+#     )
 
 
 def cached_function_with_ttl(maxsize, ttl_seconds):
@@ -66,3 +93,56 @@ def check_user_in_channels(user_id: int):
 
     with client:
         return all(check_user_in_channel(user_id, channel_username) for channel_username in channels_to_check)
+
+
+def send_ad_to_channel(channel_username: str, message_html: str):
+    asyncio.set_event_loop(loop)
+
+    with client:
+        channel = client.get_entity(channel_username)
+        return client.send_message(
+            entity=channel_username,
+            message=message_html,
+            parse_mode='HTML',
+        )
+
+
+def send_ad_photo_to_channel(channel_username: str, message_html: str, photo_path: str):
+    asyncio.set_event_loop(loop)
+
+    buttons = [
+        KeyboardButtonRow(
+            [
+                # KeyboardButtonUrl(text='View Photos', url=f'https://t.me/'),
+                Button.inline('Click me', b'clk1')
+            ]
+        ),
+    ]
+    inline_markup = ReplyKeyboardMarkup(buttons)
+
+    # reply_markup = [
+    #     [Button.text('Reply Button', resize=True)]
+    # ]
+    inline_markup = [
+        [Button.inline('Click me', b'clk1')]
+    ]
+
+    with client:
+        # return client.send_file(channel_username, photo_path)
+        return client.send_message(
+            entity=channel_username,
+            message=message_html,
+            file=photo_path,
+            buttons=inline_markup,
+            # buttons=KeyboardButtonRow( [] )
+        )
+
+        # send_media_request = SendMediaRequest(
+        #     peer=channel_username,
+        #     media=InputMediaPhoto(id=photo_path),
+        #     message=message_html,
+        #     reply_markup=inline_markup,
+        # )
+
+        # Send the media with reply markup
+        # return client.invoke(send_media_request)
