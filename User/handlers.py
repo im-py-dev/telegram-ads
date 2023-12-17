@@ -129,7 +129,7 @@ def user_start(message, bot: TeleBot):
 
     __: STR = set_lang(message.from_user.language_code)
 
-    if not check_user_in_channels(user_id):
+    if not check_user_in_channels(user_id, bot):
         return bot.send_message(message.from_user.id, f"{__.subscribe_first_m}\n {_N.join(force_subscribe_channels)}")
 
     bot.send_message(user_id, __.mm_m, reply_markup=user_main_menu_markup(__))
@@ -847,7 +847,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
     __ = set_lang(user.language_code)
 
-    if not check_user_in_channels(user_id):
+    if not check_user_in_channels(user_id, bot):
         return bot.send_message(call.message.from_user.id,
                                 f"{__.subscribe_first_m}\n {_N.join(force_subscribe_channels)}")
 
@@ -2879,7 +2879,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 user_data[user_id]['city'] = city
                 bot.edit_message_text(text=f'{__.city_label}{city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
 
-                bot.send_message(user_id, __.rent_price, reply_markup=pricing_markup(__, category_key))
+                msg = bot.send_message(user_id, __.rent_price, reply_markup=pricing_markup(__, category_key))
                 return bot.register_next_step_handler(call.message, get_price, msg)
 
         if step_name == 'pricing':
@@ -3985,7 +3985,7 @@ def user_help(message, bot):
 
     __ = set_lang(user.language_code)
 
-    if not check_user_in_channels(user_id):
+    if not check_user_in_channels(user_id, bot):
         return bot.send_message(message.from_user.id, f"{__.subscribe_first_m}\n {_N.join(force_subscribe_channels)}")
 
     bot.send_message(
@@ -4002,7 +4002,7 @@ def user_lang(message, bot):
 
     __ = set_lang(user.language_code)
 
-    if not check_user_in_channels(user_id):
+    if not check_user_in_channels(user_id, bot):
         return bot.send_message(message.from_user.id, f"{__.subscribe_first_m}\n {_N.join(force_subscribe_channels)}")
 
     bot.send_message(
