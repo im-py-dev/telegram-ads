@@ -4,6 +4,7 @@ import functools
 import time
 from typing import List
 
+from telebot.types import ChatMemberMember
 from telethon.tl.types import User, ReplyKeyboardMarkup, KeyboardButtonRow
 from telethon.sync import TelegramClient
 from telethon import Button
@@ -86,8 +87,13 @@ def check_user_in_channel(user_id: int, channel_username: str):
 
 
 # @lru_cache(maxsize=30)
+@cached_function_with_ttl(maxsize=100, ttl_seconds=5)
+def check_user_in_channels(user_id: int, bot):
+    return all([isinstance(bot.get_chat_member(chat_id=force_subscribe_channel, user_id=user_id), ChatMemberMember) for force_subscribe_channel in force_subscribe_channels])
+
+
 @cached_function_with_ttl(maxsize=100, ttl_seconds=30)
-def check_user_in_channels(user_id: int):
+def check_user_in_channels2(user_id: int):
     channels_to_check = force_subscribe_channels
     asyncio.set_event_loop(loop)
 

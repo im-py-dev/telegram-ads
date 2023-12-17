@@ -1,7 +1,5 @@
 import time
 
-# from User.reply_markups2 import select_city_markup2, end_date_markup2, contract_status_markup2, pricing_type_markup2, \
-#     pricing_markup2, description_markup2, photos_markup2, photo_markup2, ad_preview_markup2, rent_cancel_markup
 from config import ADMINS_IDS, force_subscribe_channels, posting_channels
 
 from telebot import TeleBot
@@ -151,7 +149,10 @@ def user_message(message: Message, bot: TeleBot):
 
     __ = set_lang(user.language_code)
 
-    if not check_user_in_channels(user_id):
+    # result = bot.get_chat_member(chat_id=force_subscribe_channels[0], user_id=user_id)
+    # print(f'{result=}')
+
+    if not check_user_in_channels(user_id, bot):
         return bot.send_message(message.from_user.id, f"{__.subscribe_first_m}\n {_N.join(force_subscribe_channels)}")
 
     if message.text and message.text == __.cancel_t:
@@ -357,7 +358,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             ad_preview(message)
 
         elif message.photo:
-            user_data[user_id]['photos'].append(message.photo[0].file_id)
+            user_data[user_id]['photos'].append(message.photo[-1].file_id)
             bot.send_message(message.from_user.id, __.rent_photos_done, reply_markup=photo_markup(__, category_key))
             bot.register_next_step_handler(message, get_photo)
         else:
@@ -370,7 +371,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             ad_preview(message)
 
         elif message.photo:
-            user_data[user_id]['photos'].append(message.photo[0].file_id)
+            user_data[user_id]['photos'].append(message.photo[-1].file_id)
 
             if len(user_data[user_id]['photos']) >= 10:
                 # todo handle 10 max
