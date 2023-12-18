@@ -5,7 +5,7 @@ import functools
 import time
 from typing import List
 
-from telebot.types import ChatMemberMember
+from telebot.types import ChatMemberMember, ChatMemberOwner, ChatMemberAdministrator
 from telethon.tl.types import User, ReplyKeyboardMarkup, KeyboardButtonRow, KeyboardButtonUrl, Message, \
     MessageEntityCustomEmoji, InputStickerSetShortName
 from telethon.tl.functions.messages import GetStickerSetRequest
@@ -190,11 +190,19 @@ def check_user_in_channel(user_id: int, channel_username: str):
 def check_user_in_channels(user_id: int, bot: TeleBot):
     print(f"{user_id=}")
     print(f"{posting_channel=}")
-    print("DATA", bot.get_chat_member(chat_id=posting_channel, user_id=user_id))
+    data = bot.get_chat_member(chat_id=posting_channel, user_id=user_id)
+    print("DATA TYPE", type(data))
+    print("DATA", data)
     print(isinstance(bot.get_chat_member(chat_id=posting_channel, user_id=user_id), ChatMemberMember))
 
-    return all([isinstance(bot.get_chat_member(chat_id=force_subscribe_channel, user_id=user_id), ChatMemberMember) for
-                force_subscribe_channel in force_subscribe_channels])
+    return all([
+        any([
+            isinstance(bot.get_chat_member(chat_id=posting_channel, user_id=user_id), ChatMemberOwner),
+            isinstance(bot.get_chat_member(chat_id=posting_channel, user_id=user_id), ChatMemberAdministrator),
+            isinstance(bot.get_chat_member(chat_id=posting_channel, user_id=user_id), ChatMemberMember),
+        ])
+        for force_subscribe_channel in force_subscribe_channels
+    ])
 
 
 @cached_function_with_ttl(maxsize=100, ttl_seconds=30)
