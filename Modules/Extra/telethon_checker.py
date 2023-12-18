@@ -14,11 +14,11 @@ from telethon.sync import TelegramClient
 from telethon import Button
 from telethon.tl.types.messages import StickerSet
 
-from config import PROJECT_PATH, force_subscribe_channels, JSON_PATH
+from config import PROJECT_PATH, force_subscribe_channels, JSON_PATH, posting_channel
 from dotenv import load_dotenv
 
 # from functools import lru_cache
-
+from telebot import TeleBot
 
 load_dotenv()
 
@@ -186,8 +186,10 @@ def check_user_in_channel(user_id: int, channel_username: str):
 
 
 # @lru_cache(maxsize=30)
-@cached_function_with_ttl(maxsize=100, ttl_seconds=5)
-def check_user_in_channels(user_id: int, bot):
+# @cached_function_with_ttl(maxsize=100, ttl_seconds=5)
+def check_user_in_channels(user_id: int, bot: TeleBot):
+    print(isinstance(bot.get_chat_member(chat_id=posting_channel, user_id=user_id), ChatMemberMember))
+
     return all([isinstance(bot.get_chat_member(chat_id=force_subscribe_channel, user_id=user_id), ChatMemberMember) for
                 force_subscribe_channel in force_subscribe_channels])
 
