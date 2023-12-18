@@ -1,3 +1,4 @@
+import json
 import os
 import asyncio
 import functools
@@ -5,12 +6,17 @@ import time
 from typing import List
 
 from telebot.types import ChatMemberMember
-from telethon.tl.types import User, ReplyKeyboardMarkup, KeyboardButtonRow
+from telethon.tl.types import User, ReplyKeyboardMarkup, KeyboardButtonRow, KeyboardButtonUrl, Message, \
+    MessageEntityCustomEmoji, InputStickerSetShortName
+from telethon.tl.functions.messages import GetStickerSetRequest
+
 from telethon.sync import TelegramClient
 from telethon import Button
+from telethon.tl.types.messages import StickerSet
 
-from config import PROJECT_PATH, force_subscribe_channels
+from config import PROJECT_PATH, force_subscribe_channels, JSON_PATH
 from dotenv import load_dotenv
+
 # from functools import lru_cache
 
 
@@ -24,27 +30,120 @@ loop = asyncio.new_event_loop()
 client = TelegramClient(os.path.join(PROJECT_PATH, 'sessions', f'{session_name}.session'), API_ID, API_HASH)
 client.parse_mode = 'html'
 
-# with client:
-#     from telethon.tl.types import ReplyInlineMarkup
-#
+
+def utf16_length(string):
+    utf16_bytes = string.encode('utf-16le')
+    utf16_length = len(utf16_bytes) // 2
+    return utf16_length
+
+
+# with (client):
+#     # from telethon.tl.types import ReplyInlineMarkup
 #     # Define buttons
-#     reply_markup = ReplyInlineMarkup(rows=[
-#         KeyboardButtonRow(
-#             buttons=[
-#                 KeyboardButtonUrl(
-#                     text='click me',
-#                     url='https://bard.google.com',
+#     # reply_markup = ReplyInlineMarkup(rows=[
+#     #     KeyboardButtonRow(
+#     #         buttons=[
+#     #             KeyboardButtonUrl(
+#     #                 text='click me',
+#     #                 url='https://bard.google.com',
+#     #             )
+#     #         ]
+#     #     )
+#     # ])
+#     # reply_markup = Button.inline('Click me', b'click_data')
+#     entity = client.get_entity('SY_Aloosh')
+#
+#     # messages: list[Message] = client.get_messages(entity, limit=10)
+#     # for message in messages:
+#     #     print(message.to_json())
+#     #     quit()
+#
+#     pack_short_name = 'CenterOfEmoji21155410'
+#     sticker_set: StickerSet = client(GetStickerSetRequest(
+#         stickerset=InputStickerSetShortName(pack_short_name),
+#         hash=0
+#     ))
+#
+#     # sticker_set.documents[:50]
+#     # target_message = ""
+#     # extra_offset = 0
+#     # for idx, document in enumerate(target_message):
+#     #     document_id = document.id
+#     #     alt = document.attributes[1].alt
+#     #     # if alt != '⛰':
+#     #     #     continue
+#     #     offset = idx + extra_offset
+#     #     emoji_id = document.attributes[1].stickerset.id
+#     #     emoji_access_hash = document.attributes[1].stickerset.access_hash
+#     #     message = client.send_message(
+#     #         "SY_Aloosh",
+#     #         message=alt,
+#     #         formatting_entities=[MessageEntityCustomEmoji(
+#     #             offset=offset,
+#     #             length=utf16_length(alt),
+#     #             document_id=document_id,
+#     #         )],
+#     #         silent=True
+#     #     )
+#     #     extra_offset += utf16_length(alt)
+#     #     print(f"""
+#     #     alt={alt}
+#     #     offset={offset}
+#     #     length={utf16_length(alt)}
+#     #     document_id={document_id}
+#     #     """)
+#     #
+#     # quit()
+#     # print(message.to_dict())
+#
+#     # Check if the file exists
+#
+#     if os.path.exists(JSON_PATH):
+#         # Read icons_data from the file
+#         with open(f"{JSON_PATH}/icons.json", 'r', encoding='UTF-16') as file:
+#             entities = json.load(file)
+#
+#     target_message = """1321🗂3213213🧑‍💻312312🧳312312🚕321"""
+#     formatting_entities = []
+#     extra_offset = 0
+#     for idx, char in enumerate(target_message):
+#         if char in entities.keys():
+#             print("char found", char)
+#             document_id = entities[char]["document_id"]
+#             length = entities[char]["length"]
+#             # length = utf16_length(char)
+#             # set offset
+#             offset = idx + extra_offset
+#             print("offset", offset)
+#             print("length", length)
+#             print("document_id", document_id)
+#             print("=" * 10)
+#             entities[char]["offset"] = offset
+#             formatting_entities.append(
+#                 MessageEntityCustomEmoji(
+#                     offset=offset,
+#                     length=length,
+#                     document_id=document_id,
 #                 )
-#             ]
-#         )
-#     ])
-#     reply_markup = Button.inline('Click me', b'click_data')
+#             )
+#             extra_offset += length - 1
+#
+#     print('formatting_entities')
+#     print(len(formatting_entities))
+#     message = client.send_message(
+#         "SY_Aloosh",
+#         message=target_message,
+#         formatting_entities=formatting_entities,
+#         silent=True
+#     )
+#     print(message.to_dict())
+#     input('>>')
 #
 #     client.send_message(
-#     entity='@sy_aloosh',
-#     message='123',
-#     buttons=reply_markup,
-#     # buttons=KeyboardButtonRow( [] )
+#         entity='@sy_aloosh',
+#         message='🔠',
+#         # buttons=reply_markup,
+#         # buttons=KeyboardButtonRow( [] )
 #     )
 
 
@@ -89,7 +188,8 @@ def check_user_in_channel(user_id: int, channel_username: str):
 # @lru_cache(maxsize=30)
 @cached_function_with_ttl(maxsize=100, ttl_seconds=5)
 def check_user_in_channels(user_id: int, bot):
-    return all([isinstance(bot.get_chat_member(chat_id=force_subscribe_channel, user_id=user_id), ChatMemberMember) for force_subscribe_channel in force_subscribe_channels])
+    return all([isinstance(bot.get_chat_member(chat_id=force_subscribe_channel, user_id=user_id), ChatMemberMember) for
+                force_subscribe_channel in force_subscribe_channels])
 
 
 @cached_function_with_ttl(maxsize=100, ttl_seconds=30)
