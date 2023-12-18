@@ -197,9 +197,9 @@ def check_user_in_channels(user_id: int, bot: TeleBot):
 
     return all([
         any([
-            isinstance(bot.get_chat_member(chat_id=posting_channel, user_id=user_id), ChatMemberOwner),
-            isinstance(bot.get_chat_member(chat_id=posting_channel, user_id=user_id), ChatMemberAdministrator),
-            isinstance(bot.get_chat_member(chat_id=posting_channel, user_id=user_id), ChatMemberMember),
+            isinstance(bot.get_chat_member(chat_id=force_subscribe_channel, user_id=user_id), ChatMemberOwner),
+            isinstance(bot.get_chat_member(chat_id=force_subscribe_channel, user_id=user_id), ChatMemberAdministrator),
+            isinstance(bot.get_chat_member(chat_id=force_subscribe_channel, user_id=user_id), ChatMemberMember),
         ])
         for force_subscribe_channel in force_subscribe_channels
     ])
