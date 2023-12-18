@@ -188,6 +188,9 @@ def check_user_in_channel(user_id: int, channel_username: str):
 # @lru_cache(maxsize=30)
 # @cached_function_with_ttl(maxsize=100, ttl_seconds=5)
 def check_user_in_channels(user_id: int, bot: TeleBot):
+    print(f"{user_id=}")
+    print(f"{posting_channel=}")
+    print("DATA", bot.get_chat_member(chat_id=posting_channel, user_id=user_id))
     print(isinstance(bot.get_chat_member(chat_id=posting_channel, user_id=user_id), ChatMemberMember))
 
     return all([isinstance(bot.get_chat_member(chat_id=force_subscribe_channel, user_id=user_id), ChatMemberMember) for
