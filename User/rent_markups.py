@@ -58,7 +58,7 @@ def select_2city_markup(__: STR, category_key):
     return user_btn
 
 
-def buying_cargo_from_iran_markup(__: STR, category_key):
+def cargo_from_iran_markup(__: STR, category_key):
     # farisi_city_esfehan
     # farisi_city_mashhad
     # farisi_city_tehran
@@ -86,16 +86,18 @@ def buying_cargo_from_iran_markup(__: STR, category_key):
             InlineKeyboardButton(__.farisi_city_esfehan, callback_data=f'{category_key} from_iran farisi_city_esfehan'),
             InlineKeyboardButton(__.farisi_city_mashhad, callback_data=f'{category_key} from_iran farisi_city_mashhad'),
             InlineKeyboardButton(__.farisi_city_tehran, callback_data=f'{category_key} from_iran farisi_city_tehran'),
-            InlineKeyboardButton(__.farisi_city_karaj, callback_data=f'{category_key} from_iran farisi_city_karaj'),
          ],
         [
+            InlineKeyboardButton(__.farisi_city_karaj, callback_data=f'{category_key} from_iran farisi_city_karaj'),
             InlineKeyboardButton(__.farisi_city_shiraz, callback_data=f'{category_key} from_iran farisi_city_shiraz'),
             InlineKeyboardButton(__.farisi_city_tabriz, callback_data=f'{category_key} from_iran farisi_city_tabriz'),
-            InlineKeyboardButton(__.farisi_city_qom, callback_data=f'{category_key} from_iran farisi_city_qom'),
-            InlineKeyboardButton(__.farisi_city_ahvaz, callback_data=f'{category_key} from_iran farisi_city_ahvaz'),
          ],
         [
+            InlineKeyboardButton(__.farisi_city_qom, callback_data=f'{category_key} from_iran farisi_city_qom'),
+            InlineKeyboardButton(__.farisi_city_ahvaz, callback_data=f'{category_key} from_iran farisi_city_ahvaz'),
             InlineKeyboardButton(__.farisi_city_kermanshah, callback_data=f'{category_key} from_iran farisi_city_kermanshah'),
+         ],
+        [
             InlineKeyboardButton(__.farisi_city_oromie, callback_data=f'{category_key} from_iran farisi_city_oromie'),
             InlineKeyboardButton(__.farisi_city_rasht, callback_data=f'{category_key} from_iran farisi_city_rasht'),
             InlineKeyboardButton(__.farisi_city_zahedan, callback_data=f'{category_key} from_iran farisi_city_zahedan'),
@@ -104,16 +106,19 @@ def buying_cargo_from_iran_markup(__: STR, category_key):
             InlineKeyboardButton(__.farisi_city_hamedan, callback_data=f'{category_key} from_iran farisi_city_hamedan'),
             InlineKeyboardButton(__.farisi_city_kerman, callback_data=f'{category_key} from_iran farisi_city_kerman'),
             InlineKeyboardButton(__.farisi_city_ardabil, callback_data=f'{category_key} from_iran farisi_city_ardabil'),
-            InlineKeyboardButton(__.farisi_city_bandarabbas, callback_data=f'{category_key} from_iran farisi_city_bandarabbas'),
          ],
         [
+            InlineKeyboardButton(__.farisi_city_bandarabbas, callback_data=f'{category_key} from_iran farisi_city_bandarabbas'),
             InlineKeyboardButton(__.farisi_city_arak, callback_data=f'{category_key} from_iran farisi_city_arak'),
             InlineKeyboardButton(__.farisi_city_zanjan, callback_data=f'{category_key} from_iran farisi_city_zanjan'),
-            InlineKeyboardButton(__.farisi_city_sanandaj, callback_data=f'{category_key} from_iran farisi_city_sanandaj'),
-            InlineKeyboardButton(__.farisi_city_qazvin, callback_data=f'{category_key} from_iran farisi_city_qazvin'),
          ],
         [
+            InlineKeyboardButton(__.farisi_city_sanandaj,
+                                 callback_data=f'{category_key} from_iran farisi_city_sanandaj'),
+            InlineKeyboardButton(__.farisi_city_qazvin, callback_data=f'{category_key} from_iran farisi_city_qazvin'),
             InlineKeyboardButton(__.farisi_city_gorgan, callback_data=f'{category_key} from_iran farisi_city_gorgan'),
+         ],
+        [
             InlineKeyboardButton(__.farisi_city_sari, callback_data=f'{category_key} from_iran farisi_city_sari'),
          ],
 
@@ -128,7 +133,7 @@ def buying_cargo_from_iran_markup(__: STR, category_key):
     return user_btn
 
 
-def buying_cargo_to_austria_markup(__: STR, category_key):
+def cargo_to_austria_markup(__: STR, category_key):
     user_keyboard = [
         [
             InlineKeyboardButton(__.city_1, callback_data=f'{category_key} to_austria city_4'),
@@ -152,45 +157,46 @@ def buying_cargo_to_austria_markup(__: STR, category_key):
     return user_btn
 
 
-def buying_cargo_to_iran_markup(__: STR, category_key):
+def cargo_to_iran_markup(__: STR, category_key):
     user_keyboard = [
-        [
-            InlineKeyboardButton(__.farisi_city_esfehan, callback_data=f'{category_key} to_iran farisi_city_esfehan'),
-            InlineKeyboardButton(__.farisi_city_mashhad, callback_data=f'{category_key} to_iran farisi_city_mashhad'),
-            InlineKeyboardButton(__.farisi_city_tehran, callback_data=f'{category_key} to_iran farisi_city_tehran'),
-            InlineKeyboardButton(__.farisi_city_karaj, callback_data=f'{category_key} to_iran farisi_city_karaj'),
-            InlineKeyboardButton(__.farisi_city_shiraz, callback_data=f'{category_key} to_iran farisi_city_shiraz'),
-            InlineKeyboardButton(__.farisi_city_tabriz, callback_data=f'{category_key} to_iran farisi_city_tabriz'),
-            InlineKeyboardButton(__.farisi_city_qom, callback_data=f'{category_key} to_iran farisi_city_qom'),
-            InlineKeyboardButton(__.farisi_city_ahvaz, callback_data=f'{category_key} to_iran farisi_city_ahvaz'),
-            InlineKeyboardButton(__.farisi_city_kermanshah, callback_data=f'{category_key} to_iran farisi_city_kermanshah'),
-            InlineKeyboardButton(__.farisi_city_oromie, callback_data=f'{category_key} to_iran farisi_city_oromie'),
-            InlineKeyboardButton(__.farisi_city_rasht, callback_data=f'{category_key} to_iran farisi_city_rasht'),
-            InlineKeyboardButton(__.farisi_city_zahedan, callback_data=f'{category_key} to_iran farisi_city_zahedan'),
-            InlineKeyboardButton(__.farisi_city_hamedan, callback_data=f'{category_key} to_iran farisi_city_hamedan'),
-            InlineKeyboardButton(__.farisi_city_kerman, callback_data=f'{category_key} to_iran farisi_city_kerman'),
-            InlineKeyboardButton(__.farisi_city_ardabil, callback_data=f'{category_key} to_iran farisi_city_ardabil'),
-            InlineKeyboardButton(__.farisi_city_bandarabbas, callback_data=f'{category_key} to_iran farisi_city_bandarabbas'),
-            InlineKeyboardButton(__.farisi_city_arak, callback_data=f'{category_key} to_iran farisi_city_arak'),
-            InlineKeyboardButton(__.farisi_city_zanjan, callback_data=f'{category_key} to_iran farisi_city_zanjan'),
-            InlineKeyboardButton(__.farisi_city_sanandaj, callback_data=f'{category_key} to_iran farisi_city_sanandaj'),
-            InlineKeyboardButton(__.farisi_city_qazvin, callback_data=f'{category_key} to_iran farisi_city_qazvin'),
-            InlineKeyboardButton(__.farisi_city_gorgan, callback_data=f'{category_key} to_iran farisi_city_gorgan'),
-            InlineKeyboardButton(__.farisi_city_sari, callback_data=f'{category_key} to_iran farisi_city_sari'),
-        ],
-
-        [InlineKeyboardButton(__.city_other, callback_data=f'{category_key} to_iran other')],
+        InlineKeyboardButton(__.farisi_city_esfehan, callback_data=f'{category_key} to_iran farisi_city_esfehan'),
+        InlineKeyboardButton(__.farisi_city_mashhad, callback_data=f'{category_key} to_iran farisi_city_mashhad'),
+        InlineKeyboardButton(__.farisi_city_tehran, callback_data=f'{category_key} to_iran farisi_city_tehran'),
+        InlineKeyboardButton(__.farisi_city_karaj, callback_data=f'{category_key} to_iran farisi_city_karaj'),
+        InlineKeyboardButton(__.farisi_city_shiraz, callback_data=f'{category_key} to_iran farisi_city_shiraz'),
+        InlineKeyboardButton(__.farisi_city_tabriz, callback_data=f'{category_key} to_iran farisi_city_tabriz'),
+        InlineKeyboardButton(__.farisi_city_qom, callback_data=f'{category_key} to_iran farisi_city_qom'),
+        InlineKeyboardButton(__.farisi_city_ahvaz, callback_data=f'{category_key} to_iran farisi_city_ahvaz'),
+        InlineKeyboardButton(__.farisi_city_kermanshah, callback_data=f'{category_key} to_iran farisi_city_kermanshah'),
+        InlineKeyboardButton(__.farisi_city_oromie, callback_data=f'{category_key} to_iran farisi_city_oromie'),
+        InlineKeyboardButton(__.farisi_city_rasht, callback_data=f'{category_key} to_iran farisi_city_rasht'),
+        InlineKeyboardButton(__.farisi_city_zahedan, callback_data=f'{category_key} to_iran farisi_city_zahedan'),
+        InlineKeyboardButton(__.farisi_city_hamedan, callback_data=f'{category_key} to_iran farisi_city_hamedan'),
+        InlineKeyboardButton(__.farisi_city_kerman, callback_data=f'{category_key} to_iran farisi_city_kerman'),
+        InlineKeyboardButton(__.farisi_city_ardabil, callback_data=f'{category_key} to_iran farisi_city_ardabil'),
+        InlineKeyboardButton(__.farisi_city_bandarabbas, callback_data=f'{category_key} to_iran farisi_city_bandarabbas'),
+        InlineKeyboardButton(__.farisi_city_arak, callback_data=f'{category_key} to_iran farisi_city_arak'),
+        InlineKeyboardButton(__.farisi_city_zanjan, callback_data=f'{category_key} to_iran farisi_city_zanjan'),
+        InlineKeyboardButton(__.farisi_city_sanandaj, callback_data=f'{category_key} to_iran farisi_city_sanandaj'),
+        InlineKeyboardButton(__.farisi_city_qazvin, callback_data=f'{category_key} to_iran farisi_city_qazvin'),
+        InlineKeyboardButton(__.farisi_city_gorgan, callback_data=f'{category_key} to_iran farisi_city_gorgan'),
+        InlineKeyboardButton(__.farisi_city_sari, callback_data=f'{category_key} to_iran farisi_city_sari'),
+        InlineKeyboardButton(__.city_other, callback_data=f'{category_key} to_iran other')
     ]
+
+    # user_keyboard += InlineKeyboardButton(__.city_other, callback_data=f'{category_key} to_iran other')
 
     user_btn = InlineKeyboardMarkup()
     user_btn.row_width = 3
 
-    for _ in user_keyboard:
-        user_btn.row(*_)
+    user_btn.add(*user_keyboard)
+
+    # for _ in user_keyboard:
+    #     user_btn.row(*_)
     return user_btn
 
 
-def buying_cargo_from_austria_markup(__: STR, category_key):
+def cargo_from_austria_markup(__: STR, category_key):
     user_keyboard = [
         [
             InlineKeyboardButton(__.city_1, callback_data=f'{category_key} from_austria city_1'),
@@ -358,14 +364,14 @@ def transfer_markup(__: STR, category_key, transfer_methods: dict):
     return user_btn
 
 
-def transfer_markup(__: str, category_key, transfer_methods: dict, other_done=False):
+def transfer_markup(__: str, category_key, transfer_methods: dict, other_done=False, other_text=''):
     user_keyboard = []
     for payment_name, payment_state in transfer_methods.items():
         user_keyboard.append(
             InlineKeyboardButton(f'{getattr(__, payment_name)} ✅' if payment_state else getattr(__, payment_name), callback_data=f'{category_key} transfer {payment_name} {payment_state}')
         )
 
-    user_keyboard.append(InlineKeyboardButton(f'{__.euro_transfer_8} ✅' if other_done else __.euro_transfer_8, callback_data=f'{category_key} transfer OTHER OTHER'))
+    user_keyboard.append(InlineKeyboardButton(f'{other_text} ✅' if other_done else __.euro_transfer_8, callback_data=f'{category_key} transfer OTHER OTHER'))
     user_keyboard.append(InlineKeyboardButton(__.euro_transfer_next_step, callback_data=f'{category_key} transfer NEXT NEXT'))
 
     user_btn = InlineKeyboardMarkup()

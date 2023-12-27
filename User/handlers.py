@@ -631,7 +631,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[price_line]': price_line,
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                             'description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
                 'room_rent': {
@@ -645,7 +645,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[price_line]': price_line,
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                             'description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
 
@@ -659,7 +659,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[contract_status]': ad_data['contract_status'],
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                             'description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
                 'home_applicant': {
@@ -672,7 +672,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[contract_status]': ad_data['contract_status'],
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                             'description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
 
@@ -687,7 +687,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         # '[price_line]': price_line,
                         '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
                         user_data[user_id]['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
                 'meldezettel': {
@@ -701,7 +701,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[price_line]': price_line,
                         '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
                         user_data[user_id]['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
 
@@ -717,7 +717,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[price_line2]': price_line2,
                         '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
                         user_data[user_id]['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
                 'buying_goods': {
@@ -732,7 +732,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[price_line2]': price_line2,
                         '[description]': f"\n{__.description_label}\n{user_data[user_id]['description']}\n" if
                         user_data[user_id]['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
 
@@ -748,7 +748,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                             ad_data['price']),
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                         ad_data['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
                 'selling_cargo': {
@@ -763,7 +763,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                             ad_data['price']),
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                         ad_data['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
 
@@ -774,7 +774,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
                         '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
                 'selling_euro': {
@@ -784,7 +784,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
                         '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
 
@@ -795,7 +795,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[city]': ad_data['city'],
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                         ad_data['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
                 'needs': {
@@ -805,7 +805,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         '[price_line]': price_line2,
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                         ad_data['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                 },
             }
@@ -1604,6 +1604,16 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
     elif call_str.startswith('SELLING_GOODS'):
         @cancel_option
+        def get_city_from_other(message, message_to_edit):
+            user_data[user_id]['city'] = message.text
+            bot.edit_message_text(text=f'{__.city_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id,
+                                  reply_markup=None)
+
+            # msg = bot.send_message(user_id, __.rent_sub_city, reply_markup=None)
+            # bot.register_next_step_handler(msg, get_sub_city)
+            bot.send_message(user_id, __.ask_product_name, reply_markup=None)
+            bot.register_next_step_handler(message, get_product_name)
+        @cancel_option
         def get_sub_city(message):
             user_data[user_id]['sub_city'] = message.text
 
@@ -1614,7 +1624,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         def get_product_name(message):
             user_data[user_id]['product_name'] = message.text
 
-            msg = bot.send_message(message.from_user.id, __.rent_price)
+            msg = bot.send_message(message.from_user.id, __.rent_price, reply_markup=pricing_markup(__, category_key))
             bot.register_next_step_handler(message, get_price, msg)
 
         @cancel_option
@@ -1630,7 +1640,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                            reply_markup=description_markup(__, category_key))
                     bot.register_next_step_handler(message, get_description, msg)
             except Exception as r:
-                msg = bot.send_message(message.from_user.id, __.rent_price)
+                msg = bot.send_message(message.from_user.id, __.rent_price, reply_markup=pricing_markup(__, category_key))
                 bot.register_next_step_handler(message, get_price, msg)
 
         category_key, step_name, value = call_str.split()
@@ -1690,8 +1700,21 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 bot.edit_message_text(text=f'{__.city_label}{city}', chat_id=user_id, message_id=call.message.id,
                                       reply_markup=None)
 
-                msg = bot.send_message(user_id, __.rent_sub_city, reply_markup=None)
-                bot.register_next_step_handler(msg, get_sub_city)
+                # msg = bot.send_message(user_id, __.rent_sub_city, reply_markup=None)
+                # bot.register_next_step_handler(msg, get_sub_city)
+                bot.send_message(user_id, __.ask_product_name, reply_markup=None)
+                bot.register_next_step_handler(call.message, get_product_name)
+
+        if step_name == 'pricing':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['price'] = __.rent_agreemental
+            bot.edit_message_text(text=f'{__.price_label}{__.rent_agreemental}', chat_id=user_id,
+                                  message_id=call.message.id, reply_markup=None)
+
+            msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
+            return bot.register_next_step_handler(call.message, get_description, msg)
 
         if step_name == 'description':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
@@ -1717,6 +1740,16 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
 
     elif call_str.startswith('BUYING_GOODS'):
         @cancel_option
+        def get_city_from_other(message, message_to_edit):
+            user_data[user_id]['city'] = message.text
+            bot.edit_message_text(text=f'{__.city_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id,
+                                  reply_markup=None)
+
+            # msg = bot.send_message(user_id, __.rent_sub_city, reply_markup=None)
+            # bot.register_next_step_handler(msg, get_sub_city)
+            bot.send_message(user_id, __.ask_product_name, reply_markup=None)
+            bot.register_next_step_handler(message, get_product_name)
+        @cancel_option
         def get_sub_city(message):
             user_data[user_id]['sub_city'] = message.text
 
@@ -1727,7 +1760,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         def get_product_name(message):
             user_data[user_id]['product_name'] = message.text
 
-            msg = bot.send_message(message.from_user.id, __.rent_price)
+            msg = bot.send_message(message.from_user.id, __.rent_price, reply_markup=pricing_markup(__, category_key))
             bot.register_next_step_handler(message, get_price, msg)
 
         @cancel_option
@@ -1743,7 +1776,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                            reply_markup=description_markup(__, category_key))
                     bot.register_next_step_handler(message, get_description, msg)
             except Exception as r:
-                msg = bot.send_message(message.from_user.id, __.rent_price)
+                msg = bot.send_message(message.from_user.id, __.rent_price, reply_markup=pricing_markup(__, category_key))
                 bot.register_next_step_handler(message, get_price, msg)
 
         category_key, step_name, value = call_str.split()
@@ -1803,8 +1836,21 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 bot.edit_message_text(text=f'{__.city_label}{city}', chat_id=user_id, message_id=call.message.id,
                                       reply_markup=None)
 
-                msg = bot.send_message(user_id, __.rent_sub_city, reply_markup=None)
-                bot.register_next_step_handler(msg, get_sub_city)
+                # msg = bot.send_message(user_id, __.rent_sub_city, reply_markup=None)
+                # bot.register_next_step_handler(msg, get_sub_city)
+                bot.send_message(user_id, __.ask_product_name, reply_markup=None)
+                bot.register_next_step_handler(call.message, get_product_name)
+
+        if step_name == 'pricing':
+            bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
+            bot.clear_step_handler(call.message)
+
+            user_data[user_id]['price'] = __.rent_agreemental
+            bot.edit_message_text(text=f'{__.price_label}{__.rent_agreemental}', chat_id=user_id,
+                                  message_id=call.message.id, reply_markup=None)
+
+            msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
+            return bot.register_next_step_handler(call.message, get_description, msg)
 
         if step_name == 'description':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
@@ -1843,10 +1889,10 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         @cancel_option
         def get_cargo_load(message, msg):
             try:
-                if message.text and int(message.text):
+                if message.text and float(message.text):
                     load = float(message.text)
                     user_data[user_id]['load'] = load
-                    bot.edit_message_text(text=f'{__.buying_cargo_load_label} {load}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+                    bot.edit_message_text(text=f'{__.selling_cargo_load_label} {load}', chat_id=user_id, message_id=msg.id, reply_markup=None)
 
                     msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
                     return bot.register_next_step_handler(call.message, get_description, msg)
@@ -1870,7 +1916,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             user_data[user_id]['city'] = message.text
             bot.edit_message_text(text=f'{__.buying_cargo_origin_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
 
-            bot.send_message(user_id, __.buying_cargo_destination, reply_markup=buying_cargo_to_austria_markup(__, category_key))
+            bot.send_message(user_id, __.buying_cargo_destination, reply_markup=cargo_to_iran_markup(__, category_key))
 
         @cancel_option
         def get_to_city_other(message, message_to_edit):
@@ -1939,7 +1985,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                       message_id=call.message.id, reply_markup=None)
 
                 msg = bot.send_message(user_id, __.buying_cargo_origin,
-                                       reply_markup=buying_cargo_from_iran_markup(__, category_key))
+                                       reply_markup=cargo_from_iran_markup(__, category_key))
 
             elif value == 'buying_cargo_ai':
                 user_data[user_id]['city'] = __.buying_cargo_austria
@@ -1949,7 +1995,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                       message_id=call.message.id, reply_markup=None)
 
                 msg = bot.send_message(user_id, __.buying_cargo_origin,
-                                       reply_markup=buying_cargo_from_austria_markup(__, category_key))
+                                       reply_markup=cargo_from_austria_markup(__, category_key))
 
         elif step_name == 'from_iran':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
@@ -1964,7 +2010,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 user_data[user_id]['city'] = city
                 bot.edit_message_text(text=f'{__.buying_cargo_origin_label} {city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
 
-                msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=buying_cargo_to_austria_markup(__, category_key))
+                msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=cargo_to_austria_markup(__, category_key))
 
         elif step_name == 'from_austria':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
@@ -1979,7 +2025,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 user_data[user_id]['city'] = city
                 bot.edit_message_text(text=f'{__.buying_cargo_origin_label} {city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
 
-                msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=buying_cargo_to_iran_markup(__, category_key))
+                msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=cargo_to_iran_markup(__, category_key))
 
         elif step_name == 'to_austria':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
@@ -2073,22 +2119,22 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         def get_flight_date(message):
             user_data[user_id]['start_date'] = message.text
 
-            msg = bot.send_message(message.from_user.id, __.buying_cargo_price, reply_markup=pricing_markup(__, category_key))
+            msg = bot.send_message(message.from_user.id, __.selling_cargo_price, reply_markup=pricing_markup(__, category_key))
             bot.register_next_step_handler(message, get_price, msg)
 
         @cancel_option
         def get_cargo_load(message, msg):
             try:
-                if message.text and int(message.text):
+                if message.text and float(message.text):
                     load = float(message.text)
                     user_data[user_id]['load'] = load
-                    bot.edit_message_text(text=f'{__.buying_cargo_load_label} {load}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+                    bot.edit_message_text(text=f'{__.selling_cargo_load_label} {load}', chat_id=user_id, message_id=msg.id, reply_markup=None)
 
                     msg = bot.send_message(user_id, __.rent_description, reply_markup=description_markup(__, category_key))
                     return bot.register_next_step_handler(call.message, get_description, msg)
 
             except Exception as r:
-                msg = bot.send_message(message.from_user.id, __.buying_cargo_load)
+                msg = bot.send_message(message.from_user.id, __.selling_cargo_load)
                 bot.register_next_step_handler(message, get_cargo_load, msg)
 
         @cancel_option
@@ -2104,16 +2150,16 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         @cancel_option
         def get_from_city_other(message, message_to_edit):
             user_data[user_id]['city'] = message.text
-            bot.edit_message_text(text=f'{__.buying_cargo_origin_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
+            bot.edit_message_text(text=f'{__.selling_cargo_origin_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
 
-            bot.send_message(user_id, __.buying_cargo_destination, reply_markup=buying_cargo_to_austria_markup(__, category_key))
+            bot.send_message(user_id, __.selling_cargo_destination, reply_markup=cargo_to_iran_markup(__, category_key))
 
         @cancel_option
         def get_to_city_other(message, message_to_edit):
             user_data[user_id]['city2'] = message.text
-            bot.edit_message_text(text=f'{__.buying_cargo_destination_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
+            bot.edit_message_text(text=f'{__.selling_cargo_destination_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
 
-            msg = bot.send_message(user_id, __.buying_cargo_flight_date, reply_markup=None)
+            msg = bot.send_message(user_id, __.selling_cargo_flight_date, reply_markup=None)
             bot.register_next_step_handler(call.message, get_flight_date)
 
         @cancel_option
@@ -2124,10 +2170,10 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                     user_data[user_id]['price'] = price
                     bot.edit_message_text(text=f'{__.price_label}{price}', chat_id=user_id, message_id=msg.id, reply_markup=None)
 
-                    msg = bot.send_message(message.from_user.id, __.buying_cargo_load)
+                    msg = bot.send_message(message.from_user.id, __.selling_cargo_load)
                     bot.register_next_step_handler(message, get_cargo_load, msg)
             except Exception as r:
-                msg = bot.send_message(message.from_user.id, __.buying_cargo_price, reply_markup=pricing_markup(__, category_key))
+                msg = bot.send_message(message.from_user.id, __.selling_cargo_price, reply_markup=pricing_markup(__, category_key))
                 bot.register_next_step_handler(message, get_price)
 
         if step_name == 'start':
@@ -2175,7 +2221,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                       message_id=call.message.id, reply_markup=None)
 
                 msg = bot.send_message(user_id, __.buying_cargo_origin,
-                                       reply_markup=buying_cargo_from_iran_markup(__, category_key))
+                                       reply_markup=cargo_from_iran_markup(__, category_key))
 
             elif value == 'buying_cargo_ai':
                 user_data[user_id]['city'] = __.buying_cargo_austria
@@ -2185,7 +2231,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                       message_id=call.message.id, reply_markup=None)
 
                 msg = bot.send_message(user_id, __.buying_cargo_origin,
-                                       reply_markup=buying_cargo_from_austria_markup(__, category_key))
+                                       reply_markup=cargo_from_austria_markup(__, category_key))
 
         elif step_name == 'from_iran':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
@@ -2200,7 +2246,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 user_data[user_id]['city'] = city
                 bot.edit_message_text(text=f'{__.buying_cargo_origin_label} {city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
 
-                msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=buying_cargo_to_austria_markup(__, category_key))
+                msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=cargo_to_austria_markup(__, category_key))
 
         elif step_name == 'from_austria':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
@@ -2215,7 +2261,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 user_data[user_id]['city'] = city
                 bot.edit_message_text(text=f'{__.buying_cargo_origin_label} {city}', chat_id=user_id, message_id=call.message.id, reply_markup=None)
 
-                msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=buying_cargo_to_iran_markup(__, category_key))
+                msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=cargo_to_iran_markup(__, category_key))
 
         elif step_name == 'to_austria':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
@@ -2304,8 +2350,8 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         @cancel_option
         def get_euros(message, msg):
             try:
-                if message.text and int(message.text):
-                    euros = int(message.text)
+                if message.text and float(message.text):
+                    euros = float(message.text)
                     user_data[user_id]['euros'] = euros
                     bot.edit_message_text(text=f'{__.price_label}{euros}', chat_id=user_id, message_id=msg.id, reply_markup=None)
 
@@ -2318,8 +2364,8 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         @cancel_option
         def get_tomans(message, msg):
             try:
-                if message.text and int(message.text):
-                    toman_per_euro = int(message.text)
+                if message.text and float(message.text):
+                    toman_per_euro = float(message.text)
                     user_data[user_id]['toman_per_euro'] = toman_per_euro
                     bot.edit_message_text(text=f'{__.toman_per_euro_label}{toman_per_euro}', chat_id=user_id, message_id=msg.id, reply_markup=None)
 
@@ -2429,12 +2475,17 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         except AttributeError:
                             continue
 
-                    bot.edit_message_reply_markup(
-                        chat_id=user_id,
-                        message_id=call.message.id,
-                        reply_markup=transfer_markup(__, category_key, transfer_methods, other_done=True)
-                    )
+                    # instead of edit it, mohammed need to delete it :)
+                    bot.delete_message(chat_id=user_id, message_id=call.message.id)
+
                     bot.send_message(user_id, f'{__.other_transfer_label_set} {message.text}')
+
+                    bot.send_message(
+                        chat_id=user_id,
+                        text=call.message.text,
+                        reply_markup=transfer_markup(__, category_key, transfer_methods, other_done=True, other_text=message.text)
+                    )
+
                     return bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
 
                 if user_data[user_id].get('payment_methods_other'):
@@ -2500,22 +2551,23 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         @cancel_option
         def get_euros(message, msg):
             try:
-                if message.text and int(message.text):
-                    euros = int(message.text)
+                if message.text and float(message.text):
+                    euros = float(message.text)
                     user_data[user_id]['euros'] = euros
                     bot.edit_message_text(text=f'{__.price_label}{euros}', chat_id=user_id, message_id=msg.id, reply_markup=None)
 
                     msg = bot.send_message(message.from_user.id, __.selling_euro_tomans, reply_markup=tomans_markup(__, category_key))
                     bot.register_next_step_handler(message, get_tomans, msg)
             except Exception as r:
+                print(r)
                 msg = bot.send_message(message.from_user.id, __.rent_price)
                 bot.register_next_step_handler(message, get_euros, msg)
 
         @cancel_option
         def get_tomans(message, msg):
             try:
-                if message.text and int(message.text):
-                    toman_per_euro = int(message.text)
+                if message.text and float(message.text):
+                    toman_per_euro = float(message.text)
                     user_data[user_id]['toman_per_euro'] = toman_per_euro
                     bot.edit_message_text(text=f'{__.toman_per_euro_label}{toman_per_euro}', chat_id=user_id, message_id=msg.id, reply_markup=None)
 
@@ -2625,12 +2677,22 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                         except AttributeError:
                             continue
 
-                    bot.edit_message_reply_markup(
-                        chat_id=user_id,
-                        message_id=call.message.id,
-                        reply_markup=transfer_markup(__, category_key, transfer_methods, other_done=True)
-                    )
+                    # instead of edit it, mohammed need to delete it :)
+                    bot.delete_message(chat_id=user_id, message_id=call.message.id)
+                    # bot.edit_message_reply_markup(
+                    #     chat_id=user_id,
+                    #     message_id=call.message.id,
+                    #     reply_markup=transfer_markup(__, category_key, transfer_methods, other_done=True)
+                    # )
                     bot.send_message(user_id, f'{__.other_transfer_label_set} {message.text}')
+
+                    # new message to follow the chat flow and look like real chat
+                    bot.send_message(
+                        chat_id=user_id,
+                        text=call.message.text,
+                        reply_markup=transfer_markup(__, category_key, transfer_methods, other_done=True, other_text=message.text)
+                    )
+
                     return bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
 
                 if user_data[user_id].get('payment_methods_other'):
@@ -2817,6 +2879,16 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
         print(category_key, step_name, value)
 
         @cancel_option
+        def get_needs_name(message, msg):
+            user_data[user_id]['needs_name'] = message.text
+
+            bot.edit_message_text(text=f'{__.needs_needs_name_label}{message.text}', chat_id=user_id, message_id=msg.id, reply_markup=None)
+
+            city_markup = select_city_markup(__, category_key)
+            msg = bot.send_message(user_id, __.rent_t2, reply_markup=city_markup)
+            bot.register_next_step_handler(msg, get_city_name, msg)
+
+        @cancel_option
         def get_city_name(message, message_to_edit):
             user_data[user_id]['city'] = message.text
             bot.edit_message_text(text=f'{__.city_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
@@ -2840,7 +2912,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             # bot.edit_message_reply_markup(chat_id=user_id, message_id=call.message.id, reply_markup=cancel_markup(__))
             bot.send_message(user_id, __.needs_t1, reply_markup=cancel_markup(__))
             time.sleep(0.2)
-            msg = bot.send_message(user_id, __.needs_t2, reply_markup=city_markup)
+            msg = bot.send_message(user_id, __.needs_t2)
             # bot.add_data(user_id)
             user_data[user_id] = {
                 'id': f'{user_id}_{call.message.id}',
@@ -2848,6 +2920,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'category': 'needs',
                 'user_full_name': call.from_user.full_name,
                 'product_name': '',
+                'needs_name': '',
                 'from_to_city': '',
                 'city': '',
                 'city2': '',
@@ -2864,7 +2937,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 'description': '',
                 'photos': [],
             }
-            bot.register_next_step_handler(msg, get_city_name, msg)
+            bot.register_next_step_handler(msg, get_needs_name, msg)
 
         if step_name == 'city':
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)

@@ -245,7 +245,7 @@ def admin_message(message, bot: TeleBot):
                             '[price_line]': price_line,
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                 'description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
                     'room_rent': {
@@ -259,7 +259,7 @@ def admin_message(message, bot: TeleBot):
                             '[price_line]': price_line,
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                 'description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
 
@@ -273,7 +273,7 @@ def admin_message(message, bot: TeleBot):
                             '[contract_status]': ad_data['contract_status'],
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                 'description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
                     'home_applicant': {
@@ -286,7 +286,7 @@ def admin_message(message, bot: TeleBot):
                             '[contract_status]': ad_data['contract_status'],
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                 'description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
 
@@ -301,7 +301,7 @@ def admin_message(message, bot: TeleBot):
                             # '[price_line]': price_line,
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                             ad_data['description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
                     'meldezettel': {
@@ -315,7 +315,7 @@ def admin_message(message, bot: TeleBot):
                             '[price_line]': price_line,
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                             ad_data['description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
 
@@ -331,7 +331,7 @@ def admin_message(message, bot: TeleBot):
                             '[price_line2]': price_line2,
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                             ad_data['description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
                     'buying_goods': {
@@ -346,7 +346,7 @@ def admin_message(message, bot: TeleBot):
                             '[price_line2]': price_line2,
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                             ad_data['description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
 
@@ -363,7 +363,7 @@ def admin_message(message, bot: TeleBot):
                                 ad_data['price']),
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                             ad_data['description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
                     'selling_cargo': {
@@ -377,7 +377,7 @@ def admin_message(message, bot: TeleBot):
                             '[price]': __.rent_agreemental if ad_data['price'] == __.rent_agreemental else format_number(ad_data['price']),
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                             ad_data['description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
 
@@ -388,7 +388,7 @@ def admin_message(message, bot: TeleBot):
                         '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
                         '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}', ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                     },
                     'selling_euro': {
@@ -398,7 +398,7 @@ def admin_message(message, bot: TeleBot):
                         '[toman_per_euro]': __.rent_agreemental if ad_data['toman_per_euro'] == __.rent_agreemental else format_number(ad_data['toman_per_euro']),
                         '[payment_methods]': ' '.join(map(lambda i: f'#{getattr(__, i)}',ad_data['payment_methods'])) + (f" {ad_data.get('payment_methods_other')}" if ad_data.get('payment_methods_other') else ""),
                         '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
-                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                        '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                     }
                     },
 
@@ -409,7 +409,7 @@ def admin_message(message, bot: TeleBot):
                             '[city]': ad_data['city'],
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                             ad_data['description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
                     'needs': {
@@ -419,7 +419,7 @@ def admin_message(message, bot: TeleBot):
                             '[price_line]': price_line2,
                             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                             ad_data['description'] else '',
-                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                            '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                         }
                     },
                 }
@@ -436,8 +436,7 @@ def admin_message(message, bot: TeleBot):
                 #             '[contract_status]': ad_data['contract_status'],
                 #             '[price_line]': price_line,
                 #             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
-                #                 'description'] else '',
-                #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                #                 __.advertiser_text#             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                 #         }
                 #     },
                 #     'room_rent': {
@@ -450,8 +449,7 @@ def admin_message(message, bot: TeleBot):
                 #             '[contract_status]': ad_data['contract_status'],
                 #             '[price_line]': price_line,
                 #             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
-                #                 'description'] else '',
-                #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                #                 __.advertiser_text#             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                 #         }
                 #     },
                 #     'room_applicant': {
@@ -463,8 +461,7 @@ def admin_message(message, bot: TeleBot):
                 #             '[end_date]': ad_data['end_date'],
                 #             '[contract_status]': ad_data['contract_status'],
                 #             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
-                #                 'description'] else '',
-                #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                #                 __.advertiser_text#             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                 #         }
                 #     },
                 #     'home_applicant': {
@@ -476,8 +473,7 @@ def admin_message(message, bot: TeleBot):
                 #             '[end_date]': ad_data['end_date'],
                 #             '[contract_status]': ad_data['contract_status'],
                 #             '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
-                #                 'description'] else '',
-                #             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                #                 __.advertiser_text#             '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                 #         }
                 #     },
                 # }
@@ -496,8 +492,7 @@ def admin_message(message, bot: TeleBot):
                 #     '[contract_status]': ad_data['contract_status'],
                 #     '[pricing_type]': ad_data['pricing_type'],
                 #     '[price]': format_number(ad_data['price']),
-                #     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data['description'] else '',
-                #     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                #     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data__.advertiser_text#     '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
                 # })
 
                 if ad_data['photos']:
@@ -617,7 +612,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[price_line]': price_line,
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                         'description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
                             'room_rent': {
@@ -631,7 +626,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[price_line]': price_line,
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                         'description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
 
@@ -645,7 +640,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[contract_status]': ad_data['contract_status'],
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                         'description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
                             'home_applicant': {
@@ -658,7 +653,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[contract_status]': ad_data['contract_status'],
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                         'description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
 
@@ -673,7 +668,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     # '[price_line]': price_line,
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                                     ad_data['description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
                             'meldezettel': {
@@ -687,7 +682,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[price_line]': price_line,
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                                     ad_data['description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
 
@@ -703,7 +698,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[price_line2]': price_line2,
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                                     ad_data['description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
                             'buying_goods': {
@@ -718,7 +713,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[price_line2]': price_line2,
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                                     ad_data['description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
 
@@ -735,7 +730,7 @@ def admin_callback_query(call, bot: TeleBot):
                                         ad_data['price']),
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                                     ad_data['description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
                             'selling_cargo': {
@@ -751,7 +746,7 @@ def admin_callback_query(call, bot: TeleBot):
                                         ad_data['price']),
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                                     ad_data['description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
 
@@ -768,7 +763,7 @@ def admin_callback_query(call, bot: TeleBot):
                                                                  'payment_methods_other') else ""),
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                         'description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
                             'selling_euro': {
@@ -784,7 +779,7 @@ def admin_callback_query(call, bot: TeleBot):
                                                                  'payment_methods_other') else ""),
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if ad_data[
                                         'description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
 
@@ -795,7 +790,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[city]': ad_data['city'],
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                                     ad_data['description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
                             'needs': {
@@ -805,7 +800,7 @@ def admin_callback_query(call, bot: TeleBot):
                                     '[price_line]': price_line2,
                                     '[description]': f"\n{__.description_label}\n{ad_data['description']}\n" if
                                     ad_data['description'] else '',
-                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{ad_data['user_full_name']}</a>",
+                                    '[advertiser]': f"<a href='tg://user?id={ad_data['uid']}'>{__.advertiser_text}</a>",
                                 }
                             },
 
