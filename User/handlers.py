@@ -1916,7 +1916,8 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             user_data[user_id]['city'] = message.text
             bot.edit_message_text(text=f'{__.buying_cargo_origin_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
 
-            bot.send_message(user_id, __.buying_cargo_destination, reply_markup=cargo_to_iran_markup(__, category_key))
+            markup = cargo_to_iran_markup if user_data[user_id]['from_city'] == "austria" else cargo_to_austria_markup
+            bot.send_message(user_id, __.buying_cargo_destination, reply_markup=markup(__, category_key))
 
         @cancel_option
         def get_to_city_other(message, message_to_edit):
@@ -1998,6 +1999,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                        reply_markup=cargo_from_austria_markup(__, category_key))
 
         elif step_name == 'from_iran':
+            user_data[user_id]['from_city'] = "iran"
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
             bot.clear_step_handler(call.message)
 
@@ -2013,6 +2015,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=cargo_to_austria_markup(__, category_key))
 
         elif step_name == 'from_austria':
+            user_data[user_id]['from_city'] = "austria"
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
             bot.clear_step_handler(call.message)
 
@@ -2152,7 +2155,8 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
             user_data[user_id]['city'] = message.text
             bot.edit_message_text(text=f'{__.selling_cargo_origin_label}{message.text}', chat_id=user_id, message_id=message_to_edit.id, reply_markup=None)
 
-            bot.send_message(user_id, __.selling_cargo_destination, reply_markup=cargo_to_iran_markup(__, category_key))
+            markup = cargo_to_iran_markup if user_data[user_id]['from_city'] == "austria" else cargo_to_austria_markup
+            bot.send_message(user_id, __.selling_cargo_destination, reply_markup=markup(__, category_key))
 
         @cancel_option
         def get_to_city_other(message, message_to_edit):
@@ -2234,6 +2238,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                                        reply_markup=cargo_from_austria_markup(__, category_key))
 
         elif step_name == 'from_iran':
+            user_data[user_id]['from_city'] = "iran"
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
             bot.clear_step_handler(call.message)
 
@@ -2249,6 +2254,7 @@ def user_callback_query(call: CallbackQuery, bot: TeleBot):
                 msg = bot.send_message(user_id, __.buying_cargo_destination, reply_markup=cargo_to_austria_markup(__, category_key))
 
         elif step_name == 'from_austria':
+            user_data[user_id]['from_city'] = "austria"
             bot_answer_or_send(bot, call, '', show_alert=False, cache_time=2)
             bot.clear_step_handler(call.message)
 
